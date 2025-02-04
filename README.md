@@ -1,25 +1,17 @@
  
-tom-demoapp
+tom-regions
 ===========
 
-tom-demoapp is a Django app that serves as a demonstration and code example for a tomtoolkit app.
-This app contains all of the integration points and features that a TOM developer can use in their custom
-TOM project.
-
-Detailed documentation can be found in the tomtoolkit docs.
+tom-regions has the database structures for dealing with HEALPix skymaps and making queries if points are in the skymap (for a galaxy map) or the probability of being in a region of the skymap (for a nonlocalized event map).
 
 Quick start
 -----------
 
-1. Add "tom_demoapp" to your INSTALLED_APPS setting like this::
+1. Add "tom_regions" to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = [
         ...,
-        "tom_demoapp",
+        "tom_regions",
     ]
 
-2. Paths should be automatically included via tom_common.
-
-3. Run ``python manage.py migrate`` to create the models.
-
-4. Start the development server and visit your tom to see any changes.
+2. Run ``python manage.py migrate`` to create the models.
