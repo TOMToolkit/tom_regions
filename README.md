@@ -1,8 +1,8 @@
  
-tom-regions
+tom_regions
 ===========
 
-tom-regions has the database structures for dealing with HEALPix skymaps and making queries if points are in the skymap (for a galaxy map) or the probability of being in a region of the skymap (for a nonlocalized event map).
+tom_regions has the database structures for dealing with HEALPix skymaps and making queries if points are in the skymap (for a galaxy map) or the probability of being in a region of the skymap (for a nonlocalized event map).
 
 Quick start
 -----------
