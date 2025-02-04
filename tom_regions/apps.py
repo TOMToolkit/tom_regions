@@ -16,10 +16,11 @@ class TomRegionsConfig(AppConfig):
         - 'class': The CSS class of the button
         - 'text': The text of the button
         """
+        # this is boilerplate left over from the tom_demoapp repo template
         return {'namespace': 'regions:demo-page',
                 'title': 'Demo Target Button',
                 'class': 'btn  btn-danger',
-                'text': 'Demo',
+                'text': 'Regions',
                 }
 
     def nav_items(self):
@@ -29,8 +30,12 @@ class TomRegionsConfig(AppConfig):
         be included in the navbar. The `position` key, if included, should be either "left" or "right" to specify which
         side of the navbar the partial should be included on. If not included, a right side nav item is assumed.
         """
-        return [{'partial': 'tom_regions/partials/navbar_demo.html', 'position': 'right'},
-                {'partial': 'tom_regions/partials/navbar_list_demo.html'}]
+        # this is boilerplate left over from the tom_demoapp repo template
+        #return [{'partial': 'tom_regions/partials/navbar_demo.html', 'position': 'right'},
+        #        {'partial': 'tom_regions/partials/navbar_list_demo.html'}]
+
+        # this puts a Regions item in the left side of the navbar
+        return [{'partial': 'tom_regions/partials/navbar_demo.html'}]
 
     def include_url_paths(self):
         """
