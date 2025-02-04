@@ -7,11 +7,13 @@ tom-regions has the database structures for dealing with HEALPix skymaps and mak
 Quick start
 -----------
 
-1. Add "tom_regions" to your INSTALLED_APPS setting like this::
+1. Add `'tom_regions'` to your `INSTALLED_APPS` setting like this::
 
+```python
     INSTALLED_APPS = [
-        ...,
-        "tom_regions",
+        ...
+        'tom_regions',
     ]
+```
 
 2. Run ``python manage.py migrate`` to create the models.
