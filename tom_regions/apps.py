@@ -2,10 +2,10 @@ from django.apps import AppConfig
 from django.urls import path, include
 
 
-class TomDemoappConfig(AppConfig):
+class TomRegionsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'tom_demoapp'
-    label = 'demoapp'
+    name = 'tom_regions'
+    label = 'regions'
 
     def target_detail_buttons(self):
         """
@@ -16,7 +16,7 @@ class TomDemoappConfig(AppConfig):
         - 'class': The CSS class of the button
         - 'text': The text of the button
         """
-        return {'namespace': 'demoapp:demo-page',
+        return {'namespace': 'regions:demo-page',
                 'title': 'Demo Target Button',
                 'class': 'btn  btn-danger',
                 'text': 'Demo',
@@ -29,8 +29,8 @@ class TomDemoappConfig(AppConfig):
         be included in the navbar. The `position` key, if included, should be either "left" or "right" to specify which
         side of the navbar the partial should be included on. If not included, a right side nav item is assumed.
         """
-        return [{'partial': 'tom_demoapp/partials/navbar_demo.html', 'position': 'right'},
-                {'partial': 'tom_demoapp/partials/navbar_list_demo.html'}]
+        return [{'partial': 'tom_regions/partials/navbar_demo.html', 'position': 'right'},
+                {'partial': 'tom_regions/partials/navbar_list_demo.html'}]
 
     def include_url_paths(self):
         """
@@ -38,7 +38,7 @@ class TomDemoappConfig(AppConfig):
         This method should return a list of URL patterns to be included in the main URL configuration.
         """
         urlpatterns = [
-            path('demoapp/', include('tom_demoapp.urls', namespace='demoapp'))
+            path('regions/', include('tom_regions.urls', namespace='regions'))
         ]
         return urlpatterns
 
@@ -51,8 +51,8 @@ class TomDemoappConfig(AppConfig):
         return a dictionary containing new context for the accompanying partial.
         Typically, this partial will be a bootstrap card displaying some app specific user data.
         """
-        return [{'partial': 'tom_demoapp/partials/profile_demo.html',
-                 'context': 'tom_demoapp.templatetags.demo_extras.demo_profile_data'}]
+        return [{'partial': 'tom_regions/partials/profile_demo.html',
+                 'context': 'tom_regions.templatetags.demo_extras.demo_profile_data'}]
 
     def user_lists(self):
         """
@@ -64,5 +64,5 @@ class TomDemoappConfig(AppConfig):
         Typically, this partial will be a bootstrap table displaying some app specific user list or similar.
 
         """
-        return [{'partial': 'tom_demoapp/partials/demo_user_list.html',
-                 'context': 'tom_demoapp.templatetags.demo_extras.demo_user_list'}]
+        return [{'partial': 'tom_regions/partials/demo_user_list.html',
+                 'context': 'tom_regions.templatetags.demo_extras.demo_user_list'}]
