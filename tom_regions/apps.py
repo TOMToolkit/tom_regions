@@ -17,11 +17,13 @@ class TomRegionsConfig(AppConfig):
         - 'text': The text of the button
         """
         # this is boilerplate left over from the tom_demoapp repo template
-        return {'namespace': 'regions:demo-page',
-                'title': 'Demo Target Button',
-                'class': 'btn  btn-danger',
-                'text': 'Regions',
-                }
+        button_config = {
+            'namespace': 'regions:demo-page',
+            'title': f'{self.label} Target Button',
+            'class': 'btn  btn-danger',
+            'text': 'Regions',
+        }
+        return button_config
 
     def nav_items(self):
         """
@@ -30,12 +32,11 @@ class TomRegionsConfig(AppConfig):
         be included in the navbar. The `position` key, if included, should be either "left" or "right" to specify which
         side of the navbar the partial should be included on. If not included, a right side nav item is assumed.
         """
-        # this is boilerplate left over from the tom_demoapp repo template
-        #return [{'partial': 'tom_regions/partials/navbar_demo.html', 'position': 'right'},
-        #        {'partial': 'tom_regions/partials/navbar_list_demo.html'}]
-
-        # this puts a Regions item in the left side of the navbar
-        return [{'partial': 'tom_regions/partials/navbar_demo.html'}]
+        # this puts a Regions item in the left side of the navbar -- see tom_demoapp for more examples
+        navbar_items = [
+            {'partial': f'{self.name}/partials/navbar_demo.html'},
+        ]
+        return navbar_items
 
     def include_url_paths(self):
         """
@@ -56,18 +57,10 @@ class TomRegionsConfig(AppConfig):
         return a dictionary containing new context for the accompanying partial.
         Typically, this partial will be a bootstrap card displaying some app specific user data.
         """
-        return [{'partial': 'tom_regions/partials/profile_demo.html',
-                 'context': 'tom_regions.templatetags.demo_extras.demo_profile_data'}]
-
-    def user_lists(self):
-        """
-        Integration point for adding items to the user list page.
-
-        This method should return a list of dictionaries that include a `partial` key pointing to the path of the html
-        user_list partial. The `context` key should point to the dot separated string path to the templatetag that will
-        return a dictionary containing new context for the accompanying partial.
-        Typically, this partial will be a bootstrap table displaying some app specific user list or similar.
-
-        """
-        return [{'partial': 'tom_regions/partials/demo_user_list.html',
-                 'context': 'tom_regions.templatetags.demo_extras.demo_user_list'}]
+        profile_config = [
+            {
+                'partial': f'{self.name}/partials/profile_demo.html',
+                'context': f'{self.name}.templatetags.demo_extras.demo_profile_data',
+            }
+        ]
+        return profile_config
