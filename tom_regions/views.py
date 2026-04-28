@@ -1,28 +1,10 @@
-from django.views.generic.base import TemplateView
-from django.views.generic.edit import UpdateView
-from django.views.generic.edit import DeleteView
-from django.urls import reverse_lazy
+"""Views for tom_regions.
 
-from tom_regions.models import DemoProfile
+Phase 1 ships no views; the file exists so :mod:`tom_regions.urls` has a
+place to import from when Phase 2 lands. Phase 2 will add
+``RegionListView``, ``RegionDetailView``, ``RegionCreateView``,
+``RegionUpdateView``, ``RegionDeleteView``, and the MOC-JSON endpoint
+that the Aladin overlay fetches.
+"""
 
-
-# Create your views here.
-
-
-class DemoView(TemplateView):
-    """
-    Generic demo view
-    """
-    template_name = "tom_regions/demo_page.html"
-
-
-class ProfileUpdateView(UpdateView):
-    """
-    View that handles updating of a user's ``DemoProfile``.
-    """
-    model = DemoProfile
-    fields = ['demo_secret', 'demo_field']
-    template_name = 'tom_regions/update_profile.html'
-
-    def get_success_url(self):
-        return reverse_lazy('user-profile')
+from __future__ import annotations

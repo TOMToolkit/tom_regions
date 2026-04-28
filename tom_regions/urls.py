@@ -1,12 +1,13 @@
-from django.urls import path
+"""URL routes for tom_regions.
 
-from tom_regions.views import DemoView, ProfileUpdateView
+Phase 1 ships no routes; the module exists so
+``apps.TomRegionsConfig.include_url_paths()`` can register the namespace
+ahead of Phase 2, which adds ``list``, ``create``, ``<pk>/``, ``<pk>/update/``,
+``<pk>/delete/``, ``<pk>/moc.json``, and ``<pk>/targets/``.
+"""
 
+from __future__ import annotations
 
-app_name = 'tom_regions'
+app_name = "tom_regions"
 
-urlpatterns = [
-    path('<int:pk>/demo', DemoView.as_view(), name='demo-page'),
-    path('', DemoView.as_view(), name='demo-page'),
-    path('users/<int:pk>/update/', ProfileUpdateView.as_view(), name='demo-profile-update'),
-]
+urlpatterns: list = []
