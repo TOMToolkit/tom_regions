@@ -199,7 +199,10 @@ def skycoord_to_point(skycoord) -> int:
     from cdshealpix import lonlat_to_healpix  # type: ignore[import-not-found]
 
     sc = skycoord.icrs
-    ipix = lonlat_to_healpix(sc.ra.rad, sc.dec.rad, depth=LEVEL)
+    # cdshealpix >= 0.8 requires Longitude/Latitude (with units) rather
+    # than raw float radians; the underlying call accepts the .ra/.dec
+    # attributes of a SkyCoord directly.
+    ipix = lonlat_to_healpix(sc.ra, sc.dec, depth=LEVEL)
     # cdshealpix returns a numpy scalar/array; coerce to plain int.
     return int(ipix)
 

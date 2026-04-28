@@ -11,9 +11,12 @@ tomtoolkit = ">=2.32"
 # PostgreSQL driver. tom_regions requires PostgreSQL >= 14 for int8range,
 # int8multirange, and range_agg.
 psycopg2-binary = ">=2.9"
-# Multi-Order Coverage (MOC) operations. Pulls in cdshealpix transitively
-# for fast HEALPix conversions; we don't need healpy.
+# Multi-Order Coverage (MOC) operations.
 mocpy = ">=0.16,<0.20"
+# Fast HEALPix point conversions (lonlat -> ipix at a chosen depth).
+# mocpy and cdshealpix share a Rust core but mocpy 0.19 no longer
+# re-exports cdshealpix as a Python dep, so we declare it explicitly.
+cdshealpix = ">=0.6"
 
 [tool.poetry.group.dev.dependencies]
 factory-boy = ">=3.3"
