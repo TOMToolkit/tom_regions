@@ -1,0 +1,74 @@
+{% extends 'tom_common/base.html' %}
+{% load bootstrap4 regions_extras %}
+
+{% block title %}{{ region.name }}{% endblock %}
+
+{% block content %}
+{% comment %}
+Single-region landing page. Two columns:
+
+  - Left (col-md-8): the Aladin viewer with this region's MOC. The
+    aladin_region_skymap template tag is the same one the list page
+    uses; we just hand it a one-element iterable so the resulting
+    overlay set has exactly this region in it. The OOB-update path is
+    unused on this page since there is no filter form to drive it.
+
+  - Right (col-md-4): the region's metadata card. area_sr and n_tiles
+    come from the cached summary populated by recompute_region_summary;
+    max_depth is the deepest HEALPix order present in the tile set.
+
+Phase 3 adds Edit / Delete buttons here once the form views land.
+{% endcomment %}
+<div class="row">
+  <div class="col-md-8">
+    <h2>{{ region.name }}</h2>
+    {% aladin_region_skymap region_singleton %}
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">Region details</div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-5">Type</dt>
+          <dd class="col-sm-7">{{ region.get_type_display }}</dd>
+
+          <dt class="col-sm-5">Tiles</dt>
+          <dd class="col-sm-7">{{ region.n_tiles }}</dd>
+
+          <dt class="col-sm-5">Area (sr)</dt>
+          <dd class="col-sm-7">
+            {% if region.area_sr %}{{ region.area_sr|stringformat:".4e" }}{% else %}&mdash;{% endif %}
+          </dd>
+
+          <dt class="col-sm-5">Max depth</dt>
+          <dd class="col-sm-7">{{ region.max_depth|default:"—" }}</dd>
+
+          <dt class="col-sm-5">Created</dt>
+          <dd class="col-sm-7">{{ region.created|date:"Y-m-d H:i" }}</dd>
+
+          <dt class="col-sm-5">Creator</dt>
+          <dd class="col-sm-7">{{ region.creator|default:"—" }}</dd>
+
+          {% if region.description %}
+          <dt class="col-sm-5">Description</dt>
+          <dd class="col-sm-7">{{ region.description|linebreaksbr }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+      <div class="card-footer text-muted small">
+        {% comment %}
+        Label the export as IVOA so users know the JSON shape is portable
+        to mocpy, Aladin, TOPCAT, and any other IVOA-aware tool -- not a
+        tom_regions-internal format. The IVOA MOC standard is the
+        canonical reference for the wire format.
+        {% endcomment %}
+        <a href="{% url 'regions:moc-json' pk=region.pk %}"
+           title="IVOA Multi-Order Coverage Map JSON. See https://ivoa.net/documents/MOC/ -- consumable by mocpy, Aladin Lite/Desktop, TOPCAT, and other IVOA-aware tools.">
+          MOC (IVOA JSON) &rsaquo;
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

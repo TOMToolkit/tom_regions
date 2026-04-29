@@ -1,0 +1,33 @@
+{% comment %}
+tom_regions/partials/region_table_partial.html
+
+The body partial that HTMX swaps into div.table-container on filter /
+sort / page changes. The wrapping region_list.html handles everything
+outside the table itself (heading, filter form, Aladin viewer); this
+file only owns the table render and the "no rows" hint, plus the OOB
+block that refreshes the Aladin overlay's region set in lockstep with
+the table.
+
+Note the OOB pattern at the bottom: the same partial that renders the
+new rows also carries the script that updates the Aladin viewer. That
+keeps "what's in the table" and "what's drawn on the sky" guaranteed
+to match -- a common UX hazard with HTMX-driven list views that
+decouple the two. See aladin_region_skymap.html for the full
+description of this pattern.
+{% endcomment %}
+{% load render_table from django_tables2 %}
+
+{% render_table table %}
+
+{% if not table.data %}
+    <div class="alert alert-info mt-3">
+        {% if empty_database %}
+            There are no regions in the database yet.
+        {% else %}
+            No regions match those filters.
+        {% endif %}
+    </div>
+{% endif %}
+
+{% load regions_extras %}
+{% aladin_region_skymap_oob skymap_objects %}

@@ -1,0 +1,21 @@
+{% comment %}
+tom_regions/partials/aladin_region_skymap_oob.html
+
+Out-of-band (OOB) script block that re-runs the Aladin overlay loader
+against the new region set whenever the table partial is swapped in.
+See aladin_region_skymap.html for the full description of the pattern;
+this file is the receiving end.
+
+The hx-swap-oob="true" attribute is what makes this work: HTMX sees
+the matching id ("aladin-regions-data") in the response, replaces that
+element in the existing DOM, and runs any inline <script> it contains.
+The viewer itself is never rebuilt -- only the region overlay set
+changes.
+{% endcomment %}
+<div id="aladin-regions-data" hx-swap-oob="true">
+    <script>
+        if (window.updateAladinRegions) {
+            updateAladinRegions({{ regions_json|safe }});
+        }
+    </script>
+</div>
