@@ -30,8 +30,6 @@ when each new view comes online.
 
 from __future__ import annotations
 
-from collections import defaultdict
-
 from django.http import JsonResponse
 from django.views.generic import DetailView, View
 from django.shortcuts import get_object_or_404
@@ -39,9 +37,9 @@ from django_filters.views import FilterView
 
 from tom_common.htmx_table import HTMXTableViewMixin
 from tom_regions.filters import RegionFilterSet
-from tom_regions.healpix_django.encoding import range_to_level_ipix
-from tom_regions.models import Region, RegionTile
+from tom_regions.models import Region
 from tom_regions.tables import RegionTable
+from tom_regions.utils import region_to_moc_json
 
 
 class RegionListView(HTMXTableViewMixin, FilterView):
@@ -92,13 +90,20 @@ class RegionListView(HTMXTableViewMixin, FilterView):
 class RegionDetailView(DetailView):
     """Single-region landing page.
 
-    Plain Django ``DetailView``. The template will reuse the same
-    Aladin partial as the list view, just passing a one-element list
-    so a single MOC ends up on the sky.
+    Plain Django ``DetailView``. The template reuses the list view's
+    Aladin partial by passing a one-element iterable as
+    ``region_singleton``, which keeps the template tag's contract
+    (it always receives an iterable of regions) consistent across
+    the list and detail pages.
     """
 
     template_name = "tom_regions/region_detail.html"
     model = Region
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["region_singleton"] = [self.object]
+        return context
 
 
 class RegionMOCJsonView(View):
@@ -147,20 +152,9 @@ class RegionMOCJsonView(View):
     """
 
     def get(self, request, pk: int):
-        # We need the (level, ipix) pair for each tile. Doing the
-        # decoding in Python here rather than calling Region.to_moc()
-        # avoids two round-trips through mocpy and is straightforward
-        # at v1 sizes (a few hundred tiles per region). If/when a
-        # region ever holds 50k+ tiles, switching to ``Region.to_moc().
-        # serialize(format='json')`` is a one-liner.
-        get_object_or_404(Region, pk=pk)  # 404 if missing
-        rows = RegionTile.objects.filter(region_id=pk).values_list("hpx", flat=True)
-        # IVOA MOC JSON shape: {"<order>": [<ipix>, ...], ...}.
-        moc_json: dict[str, list[int]] = defaultdict(list)
-        # Tiles in our table are deepest-level int8range intervals;
-        # decode each to (level, ipix). Each tile decodes uniquely
-        # because bulk_create_tiles always emits NESTED-aligned ranges.
-        for hpx in rows:
-            level, ipix = range_to_level_ipix(hpx.lower, hpx.upper)
-            moc_json[str(level)].append(ipix)
-        return JsonResponse(moc_json)
+        # The encoding logic lives in tom_regions.utils.region_to_moc_json
+        # so the in-page Aladin overlay (which inlines the same dict)
+        # cannot drift from this HTTP endpoint. See that helper's
+        # docstring for the IVOA shape and the rationale.
+        region = get_object_or_404(Region, pk=pk)
+        return JsonResponse(region_to_moc_json(region))

@@ -122,6 +122,46 @@ def recompute_region_summary(region: "Region") -> None:
     region.save(update_fields=["n_tiles", "area_sr", "max_depth", "modified"])
 
 
+def region_to_moc_json(region: "Region") -> dict[str, list[int]]:
+    """Serialize a region's tile set as an IVOA MOC JSON dict.
+
+    Shape: ``{"<order>": [<ipix>, <ipix>, ...], ...}``. The dict has
+    *one key per HEALPix order present in the tile set*, not a single
+    flat key -- because the underlying RegionTile rows themselves span
+    multiple orders. Each row's range length encodes its native level
+    (see :func:`tom_regions.healpix_django.encoding.range_to_level_ipix`),
+    so the loop below is just bucketing by that level.
+
+    This is the wire format both ``mocpy.MOC.serialize(format='json')``
+    and Aladin Lite v3's :js:func:`A.MOCFromJSON` consume. Two callers
+    in tom_regions need the same dict:
+
+    - :class:`tom_regions.views.RegionMOCJsonView` -- serves the dict
+      as the body of an ``application/json`` response so external IVOA
+      tools can fetch the URL directly.
+    - :func:`tom_regions.templatetags.regions_extras.aladin_region_skymap`
+      -- inlines the dict into the page payload so Aladin Lite can build
+      the overlay synchronously without a follow-up fetch (the
+      ``MOCFromURL`` path expects FITS, so JSON has to ride inline).
+
+    Centralizing the encoding here keeps the two paths from drifting --
+    a class of bug where the HTTP endpoint and the in-page overlay
+    quietly disagree about ipix order or coalescing.
+    """
+    from collections import defaultdict
+
+    from tom_regions.healpix_django.encoding import range_to_level_ipix
+
+    moc_json: dict[str, list[int]] = defaultdict(list)
+    for hpx in region.tiles.values_list("hpx", flat=True):
+        # Tiles are always NESTED-aligned (they are inserted via
+        # bulk_create_tiles, which only emits NESTED ranges), so the
+        # decode is unambiguous.
+        level, ipix = range_to_level_ipix(hpx.lower, hpx.upper)
+        moc_json[str(level)].append(ipix)
+    return dict(moc_json)
+
+
 def region_to_moc(region: "Region") -> "MOC":
     """Reconstruct a :class:`mocpy.MOC` from a region's tile rows.
 
