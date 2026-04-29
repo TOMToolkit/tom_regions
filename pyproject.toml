@@ -20,6 +20,7 @@ cdshealpix = ">=0.6"
 
 [tool.poetry.group.dev.dependencies]
 factory-boy = ">=3.3"
+flake8 = ">=7.0"
 
 
 [build-system]

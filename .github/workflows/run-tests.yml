@@ -1,0 +1,74 @@
+# tom_regions test matrix
+#
+# Two jobs:
+#   - lint:   flake8 against the tom_regions package
+#   - test:   the standalone test runner against a postgres:16-alpine
+#             service container, across the supported Python versions.
+#
+# The ``services.postgres`` block stands up a real PostgreSQL 14+
+# instance per matrix cell -- tom_regions hard-requires postgres for
+# int8range, range_agg, and SP-GiST, so a sqlite shortcut isn't an
+# option. The credentials below match boot_django.py's defaults.
+
+name: run-tests
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        run: pip install --upgrade pip poetry
+      - name: Install deps
+        run: poetry install --with dev
+      - name: Run flake8
+        run: poetry run flake8 tom_regions --exclude='*/migrations/*' --max-line-length=120
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13']
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tom_regions_test
+        ports:
+          - 5432:5432
+        # Block until the container is accepting connections; without
+        # this, the first migration can race the postgres boot.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        run: pip install --upgrade pip poetry
+      - name: Install deps
+        run: poetry install --with dev
+      - name: Run tests
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: '5432'
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tom_regions_test
+        run: poetry run python tom_regions/tests/run_tests.py
