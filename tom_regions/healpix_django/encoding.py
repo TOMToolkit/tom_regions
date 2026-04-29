@@ -24,6 +24,27 @@ The encoding tests (``tests/test_encoding.py``) exercise every conversion as
 a worked example so a reader can build the same intuition that Leo Singer's
  HEALPix-Alchemy paper provides.
 
+Why multi-resolution storage matters
+------------------------------------
+A MOC ("Multi-Order Coverage map") is *inherently* heterogeneous. When
+mocpy builds one (e.g., from a cone or a polygon), it normalizes the
+result: any four sibling pixels at level *k* that all fall inside the
+region get aggregated into their single level-(*k*-1) parent,
+recursively up the hierarchy. The output is a small number of large
+tiles for the interior and many small tiles for the rim -- an enormous
+compression compared to a flat-depth representation. A 1° cone at
+``max_depth=10`` stores ~117 tiles this way; flattened to depth 10, the
+same area would take ~30,000. For LIGO skymaps the gap is several
+orders of magnitude larger, which is what makes them tractable in a
+database at all.
+
+The (lower, upper) representation preserves this heterogeneity: a
+tile's *native level* is encoded in the range's *length*
+(length ``4**(LEVEL-k)`` → level *k*), so the database column accepts
+mixed-level tiles in a single homogeneous ``int8range`` column with no
+sidecar level field. :func:`range_to_level_ipix` recovers the level on
+read; the SP-GiST index treats coarse and fine tiles uniformly.
+
 Reading order
 -------------
 - Previous: :mod:`tom_regions.healpix_django.constants` (the geometric
@@ -136,9 +157,13 @@ def level_ipix_to_range(level: int, ipix: int) -> Tuple[int, int]:
 def range_to_level_ipix(lower: int, upper: int) -> Tuple[int, int]:
     """Recover ``(level, ipix)`` from a deepest-level interval.
 
-    Inverse of :func:`level_ipix_to_range`. Only intervals produced by that
-    function (or any other source aligned to a NESTED block boundary) decode
-    cleanly; arbitrary intervals raise.
+    Inverse of :func:`level_ipix_to_range`. The interval's *length* is what
+    encodes its level: a length of ``4**(LEVEL-k)`` decodes to level *k*.
+    This is the property that lets the database store a heterogeneous MOC
+    -- coarse interior tiles alongside fine rim tiles -- in a single
+    homogeneous ``int8range`` column with no sidecar level field. Only
+    intervals aligned to a NESTED block boundary decode cleanly; arbitrary
+    intervals raise.
 
     Args:
         lower: Inclusive lower bound of the interval.

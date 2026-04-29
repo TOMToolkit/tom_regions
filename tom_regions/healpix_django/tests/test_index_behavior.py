@@ -210,6 +210,72 @@ class TileAreaTests(IndexBehaviorTestCase):
             )
 
 
+class MultiOrderStorageTests(IndexBehaviorTestCase):
+    """The "M" in MOC is load-bearing: tiles are stored at their native level.
+
+    When :func:`mocpy.MOC.from_cone` (and friends) build a region, mocpy
+    *normalizes* the result -- any four sibling pixels at level *k* that
+    all fall inside the region get aggregated into their level-(*k*-1)
+    parent, recursively. The result is a heterogeneous tile list: coarse
+    tiles for the interior, fine tiles for the rim where the boundary
+    cuts pixels.
+
+    :func:`bulk_create_tiles` preserves that heterogeneity on insert -- a
+    level-*k* tile maps to an int8range of length ``4**(LEVEL-k)``, and
+    that's what gets stored. So a single region's RegionTile rows span
+    multiple HEALPix orders, with the level recoverable from each row's
+    range length.
+
+    This test is what you'd write to convince yourself that the
+    compression-in-storage claim in :mod:`encoding`'s module docstring
+    isn't aspirational. It also illustrates *why* a database column of
+    type int8range is exactly the right choice: a flat depth-29 list
+    would need orders of magnitude more rows.
+    """
+
+    def test_crab_cone_stores_tiles_at_multiple_orders(self):
+        from tom_regions.healpix_django.encoding import range_to_level_ipix
+        from tom_regions.models import RegionTile
+
+        levels_present = set()
+        for tile in RegionTile.objects.filter(region=self.crab):
+            level, _ = range_to_level_ipix(tile.hpx.lower, tile.hpx.upper)
+            levels_present.add(level)
+
+        # mocpy aggregates contiguous deepest-level pixels into coarser
+        # parents wherever it can, so any non-trivial cone uses at least
+        # two orders -- a coarse interior and a fine rim. If only one
+        # order appears, mocpy is no longer normalizing on our behalf and
+        # the storage compression claim breaks down.
+        self.assertGreater(
+            len(levels_present), 1,
+            f"expected multiple HEALPix orders, got only {sorted(levels_present)}; "
+            "if this fails, mocpy's normalization may have changed.",
+        )
+
+    def test_storage_is_dramatically_more_compact_than_flat(self):
+        from tom_regions.healpix_django.constants import PIXEL_AREA_STER
+        from tom_regions.healpix_django.encoding import range_to_level_ipix
+        from tom_regions.models import RegionTile
+
+        tiles = list(RegionTile.objects.filter(region=self.crab).only("hpx"))
+        levels = [range_to_level_ipix(t.hpx.lower, t.hpx.upper)[0] for t in tiles]
+        max_level = max(levels)
+
+        # If the same area were flattened to a list of pixels at the
+        # deepest level present, the count would be region_area divided
+        # by the pixel area at that level. Multi-order aggregation should
+        # produce significantly fewer rows.
+        pixel_area_at_max = PIXEL_AREA_STER * (4 ** (29 - max_level))
+        flat_count_estimate = self.crab.area_sr / pixel_area_at_max
+        self.assertLess(
+            len(tiles),
+            flat_count_estimate,
+            f"actual={len(tiles)}, flat-equivalent={flat_count_estimate:.0f}; "
+            "compression should be at least 1x.",
+        )
+
+
 class TileIntersectAndUnionTests(IndexBehaviorTestCase):
     """``int8range * int8range`` and ``unnest(range_agg(...))`` raw-SQL demos.
 

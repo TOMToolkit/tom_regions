@@ -108,6 +108,11 @@ class IntervalRoundTripTests(unittest.TestCase):
     starting at ``ipix << (2*(LEVEL-k))``. Therefore *any* NESTED tile at any
     order can be represented losslessly by a half-open ``int8range``.
 
+    A direct consequence: the int8range column accepts tiles at *any*
+    level (the level is recovered by the range's length), so a single
+    multi-order MOC's tiles all live in one homogeneous database column.
+    No sidecar level field is needed.
+
     Once tiles live as integer intervals, set-theoretic queries on coverage
     maps reduce to interval arithmetic, which PostgreSQL implements natively
     and indexes with SP-GiST.
