@@ -1,0 +1,14 @@
+{% comment %}
+Navbar entry contributed by tom_regions via TomRegionsConfig.nav_items().
+Rendered by tom_common's navbar_content.html through the
+{% navbar_app_addons %} template tag, which calls each installed app's
+nav_items() hook and renders the returned partials in order.
+
+The link is "active" when any URL in the regions namespace is being
+served, mirroring how the Targets and Observations entries highlight
+themselves. Single link rather than a dropdown for now -- a dropdown
+makes sense once create / detail / region-grouping pages exist (Phase 3).
+{% endcomment %}
+<li class="nav-item {% if request.resolver_match.namespace == 'regions' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'regions:list' %}">Regions</a>
+</li>

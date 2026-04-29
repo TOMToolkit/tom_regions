@@ -1,0 +1,338 @@
+"""django-filter FilterSet for the Region list view.
+
+Where this fits in the Phase 2 view stack
+-----------------------------------------
+The list view binds three pieces together::
+
+    URL -> View (HTMXTableViewMixin + FilterView)
+              |
+              +-- Table     (tables.py: rows -> HTML cells)
+              +-- FilterSet (this module: GET params -> queryset)
+              +-- Templates (region_list.html and partials)
+
+The FilterSet is the GET-params side of the contract. django-filter
+takes the form-encoded query string, validates each named field
+against a Filter declared on the FilterSet, and returns a filtered
+queryset. :class:`tom_common.htmx_table.HTMXTableFilterSet` adds the
+HTMX glue: a debounced "general search" input, an override point for
+the search function, and a crispy-forms helper that drops the submit
+button (htmx fires on input change instead).
+
+Filter taxonomy
+---------------
+The advanced filters fall into three groups, each backed by a
+different SQL pattern. Knowing which group a filter is in tells you
+what the resulting query looks like and how it scales:
+
+1. **Scalar filters** -- ``name`` (icontains), ``type`` (choice),
+   ``area_sr`` (range). Standard django-filter, nothing exotic. These
+   compile to plain ``WHERE column op value`` clauses on
+   ``regions_region``.
+2. **Single-point filters** -- ``contains_point`` (RA, Dec) and
+   ``contains_target`` (target name). Both compute one deepest-level
+   pixel index and emit the inherited ``int8range @> bigint`` lookup
+   from :class:`tom_regions.healpix_django.HealpixTileField`. They
+   differ only in where the (RA, Dec) comes from. Each compiles to
+   one JOIN to ``regions_regiontile`` plus a single SP-GiST-friendly
+   predicate.
+3. **Cone-search filter** -- ``cone_search`` (RA, Dec, radius). Builds
+   a MOC for the cone via ``mocpy.MOC.from_cone`` and matches regions
+   whose tiles overlap any tile of the cone. v1 uses an OR-across-cone-
+   tiles query (one ``hpx && range`` predicate per cone tile),
+   which produces a clean SQL ``WHERE ... OR ... OR ...`` chain. Fine
+   for the few-hundred-tile MOCs typical of single-pointing searches;
+   large cones (thousands of tiles) will warrant an
+   ``int8range && int8multirange`` form, deferred to Phase 4 alongside
+   an ``Int8MultiRangeField``.
+"""
+
+from __future__ import annotations
+
+import logging
+
+import django_filters
+from astropy import units as u
+from astropy.coordinates import Angle, Latitude, Longitude, SkyCoord
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import HTML, Column, Div, Layout, Row
+from django import forms
+from django.db.models import Q
+
+from tom_common.htmx_table import HTMXTableFilterSet
+from tom_regions.base_models import REGION_TYPE_CHOICES
+from tom_regions.healpix_django.encoding import skycoord_to_point
+from tom_regions.models import Region
+
+logger = logging.getLogger(__name__)
+
+
+# Common HTMX widget attributes for "search-on-Enter" filters (those whose
+# inputs aren't useful until the user has typed everything). RA/Dec/radius
+# triplets fall into this category; partial input would mis-fire a search.
+_HTMX_ON_ENTER = {
+    "hx-get": "",
+    "hx-trigger": "keyup[keyCode==13]",
+    "hx-target": "div.table-container",
+    "hx-swap": "innerHTML",
+    "hx-indicator": ".progress",
+    "hx-include": "closest form",
+}
+
+# Common HTMX widget attributes for "search-on-change" filters (selects).
+_HTMX_ON_CHANGE = {
+    "hx-get": "",
+    "hx-trigger": "change",
+    "hx-target": "div.table-container",
+    "hx-swap": "innerHTML",
+    "hx-indicator": ".progress",
+    "hx-include": "closest form",
+}
+
+
+class RegionFilterSet(HTMXTableFilterSet):
+    """Filters available on the Region list view.
+
+    Public filters (in roughly the order they appear in the form):
+
+    - ``query`` -- general icontains search across ``name`` and
+      ``description`` (overridden ``general_search``).
+    - ``name`` -- name icontains. Hidden behind the advanced toggle but
+      part of the API.
+    - ``type`` -- one of the :data:`REGION_TYPE_CHOICES`.
+    - ``contains_point`` -- "RA, Dec" string; matches regions whose
+      tiles cover that single sky pixel.
+    - ``contains_target`` -- a Target name; same query but with the
+      pixel sourced from the target's row in the database.
+    - ``cone_search`` -- "RA, Dec, radius_deg" string; matches regions
+      whose tiles overlap any tile of the cone MOC.
+    - ``area_sr_min`` / ``area_sr_max`` -- bound the cached area in
+      steradians.
+    """
+
+    # ------------------------------------------------------------------
+    # Scalar filters.
+    # ------------------------------------------------------------------
+
+    name = django_filters.CharFilter(
+        field_name="name",
+        lookup_expr="icontains",
+        label="Name contains",
+    )
+
+    type = django_filters.ChoiceFilter(
+        choices=REGION_TYPE_CHOICES,
+        widget=forms.Select(attrs=_HTMX_ON_CHANGE),
+    )
+
+    area_sr_min = django_filters.NumberFilter(
+        field_name="area_sr",
+        lookup_expr="gte",
+        label="Min area (sr)",
+    )
+    area_sr_max = django_filters.NumberFilter(
+        field_name="area_sr",
+        lookup_expr="lte",
+        label="Max area (sr)",
+    )
+
+    # ------------------------------------------------------------------
+    # Single-point filters: "which regions cover this point?"
+    # ------------------------------------------------------------------
+
+    contains_point = django_filters.CharFilter(
+        method="filter_contains_point",
+        label="Contains point",
+        help_text="RA, Dec (degrees)",
+        widget=forms.TextInput(attrs={"placeholder": "RA, Dec", **_HTMX_ON_ENTER}),
+    )
+
+    contains_target = django_filters.CharFilter(
+        method="filter_contains_target",
+        label="Contains target",
+        help_text="Target name (or alias) -- finds regions covering its position",
+        widget=forms.TextInput(attrs={"placeholder": "Target name", **_HTMX_ON_ENTER}),
+    )
+
+    def filter_contains_point(self, queryset, name, value):
+        """Filter to regions whose tiles contain the deepest-level pixel for (RA, Dec)."""
+        if not value:
+            return queryset
+        try:
+            ra_str, dec_str = (s.strip() for s in value.split(","))
+            sc = SkyCoord(float(ra_str), float(dec_str), unit="deg")
+        except (ValueError, AttributeError):
+            logger.debug("filter_contains_point: cannot parse %r", value)
+            return queryset.none()
+        return queryset.filter(tiles__hpx__contains=skycoord_to_point(sc)).distinct()
+
+    def filter_contains_target(self, queryset, name, value):
+        """Look up a Target by name/alias, then filter to regions covering it.
+
+        We mirror tom_targets' fuzzy-name lookup (``Target.matches``) so a
+        user can paste a TNS name or an LCO internal alias and get the
+        same result they'd see on the targets page. Ambiguous matches
+        (more than one target with that name) return no regions; the
+        user has to disambiguate.
+        """
+        if not value:
+            return queryset
+        try:
+            from tom_targets.models import Target
+        except ImportError:
+            logger.warning("contains_target filter unusable: tom_targets not installed")
+            return queryset.none()
+        # ``Target.matches.match_target`` performs a name+alias lookup and
+        # returns a queryset; we resolve to a single hit before computing
+        # the pixel.
+        target_qs = Target.matches.match_target(value)
+        targets = list(target_qs[:2])  # cap the slice; one row is enough
+        if len(targets) != 1:
+            return queryset.none()
+        target = targets[0]
+        sc = SkyCoord(target.ra, target.dec, unit="deg")
+        return queryset.filter(tiles__hpx__contains=skycoord_to_point(sc)).distinct()
+
+    # ------------------------------------------------------------------
+    # Cone-search filter: "which regions overlap this cone?"
+    # ------------------------------------------------------------------
+
+    cone_search = django_filters.CharFilter(
+        method="filter_cone_search",
+        label="Cone search (overlapping regions)",
+        help_text="RA, Dec, radius (degrees)",
+        widget=forms.TextInput(
+            attrs={"placeholder": "RA, Dec, Radius", **_HTMX_ON_ENTER}
+        ),
+    )
+
+    def filter_cone_search(self, queryset, name, value):
+        """Filter to regions whose tiles overlap any tile of the cone.
+
+        Builds a MOC for the cone, decomposes it to (lower, upper) tile
+        intervals, and emits an OR over ``hpx__overlap`` for each. For
+        the cone sizes typical of Phase 1/2 (a few degrees, ~100 tiles)
+        this is fine; large skymap cross-matches (LIGO-scale) want a
+        single ``int8range && int8multirange`` query, which we'll add
+        in Phase 4 alongside an ``Int8MultiRangeField``.
+        """
+        if not value:
+            return queryset
+        try:
+            ra_str, dec_str, radius_str = (s.strip() for s in value.split(","))
+            ra_deg = float(ra_str)
+            dec_deg = float(dec_str)
+            radius_deg = float(radius_str)
+        except (ValueError, AttributeError):
+            logger.debug("filter_cone_search: cannot parse %r", value)
+            return queryset.none()
+
+        # Heavy import; kept inside the method so general filter use
+        # doesn't pay mocpy's import cost on every form render.
+        from mocpy import MOC
+
+        from tom_regions.healpix_django.encoding import moc_to_ranges
+
+        cone = MOC.from_cone(
+            lon=Longitude(ra_deg * u.deg),
+            lat=Latitude(dec_deg * u.deg),
+            radius=Angle(radius_deg * u.deg),
+            max_depth=10,
+        )
+        q = Q()
+        for lower, upper in moc_to_ranges(cone):
+            q |= Q(tiles__hpx__overlap=(lower, upper))
+        if not q:  # empty cone (zero radius)
+            return queryset.none()
+        return queryset.filter(q).distinct()
+
+    # ------------------------------------------------------------------
+    # General search and form layout.
+    # ------------------------------------------------------------------
+
+    def general_search(self, queryset, name, value):
+        """Search the canonical name and the description.
+
+        We deliberately do not search ``RegionName`` aliases here in
+        Phase 2; the alias table will be wired up in Phase 3 alongside
+        the create flow that populates it. Anyone needing alias search
+        in v1 can use the ``name`` filter, which the API exposes.
+        """
+        if not value:
+            return queryset
+        return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
+
+    @property
+    def form(self):
+        """Crispy-forms layout for the filter form.
+
+        Two design choices worth flagging:
+
+        1. We disable the ``<form>`` tag (``form_tag = False``). The
+           list template renders one outer form that contains the
+           filter inputs, the table itself, and the per-row checkbox
+           group. Letting crispy-forms emit its own form tag would
+           nest forms, which HTML doesn't allow.
+
+        2. We disable CSRF (``disable_csrf = True``). The filter form
+           submits via htmx GET requests, which Django doesn't require
+           CSRF for (CSRF is a write-side defense). The mutating
+           actions on this page (delete-selected, group-add) live in
+           a separate form that does include CSRF.
+
+        The cached ``_form`` attribute is the same pattern
+        :class:`HTMXTableFilterSet` uses; we have to re-cache it here
+        because we want our own helper rather than the parent's.
+        """
+        if not hasattr(self, "_form"):
+            self._form = super().form
+            helper = FormHelper()
+            helper.form_tag = False
+            helper.disable_csrf = True
+            helper.form_show_labels = True
+            helper.layout = Layout(
+                Row(Column("query", css_class="form-group col-md-3")),
+                HTML(
+                    """
+                    <div class="row">
+                      <div class="col-md-12 mb-2">
+                        <a class="btn btn-link p-0" data-toggle="collapse"
+                           href="#advancedFilters" role="button"
+                           aria-expanded="false" aria-controls="advancedFilters">
+                          Advanced &rsaquo;
+                        </a>
+                      </div>
+                    </div>
+                    """
+                ),
+                Div(
+                    Row(
+                        Column("name", css_class="form-group col-md-4"),
+                        Column("type", css_class="form-group col-md-4"),
+                    ),
+                    Row(
+                        Column("contains_point", css_class="form-group col-md-6"),
+                        Column("contains_target", css_class="form-group col-md-6"),
+                    ),
+                    Row(Column("cone_search", css_class="form-group col-md-12")),
+                    Row(
+                        Column("area_sr_min", css_class="form-group col-md-3"),
+                        Column("area_sr_max", css_class="form-group col-md-3"),
+                    ),
+                    css_class="collapse",
+                    css_id="advancedFilters",
+                ),
+            )
+            self._form.helper = helper
+        return self._form
+
+    class Meta:
+        model = Region
+        fields = [
+            "name",
+            "type",
+            "contains_point",
+            "contains_target",
+            "cone_search",
+            "area_sr_min",
+            "area_sr_max",
+        ]

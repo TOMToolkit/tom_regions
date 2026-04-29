@@ -39,12 +39,25 @@ class TomRegionsConfig(AppConfig):
     # ------------------------------------------------------------------
 
     def target_detail_buttons(self):
-        # No button until the regions list/detail views exist (Phase 2).
+        # The plan calls for a "Find regions containing this target"
+        # button that routes to ``regions:list?cone_search=<ra>,<dec>,5deg``.
+        # That requires either query-string-aware button rendering in
+        # tom_common (currently the button helper just runs ``{% url %}``
+        # against the namespace) or a dedicated detail view that takes
+        # the target id and computes the cone server-side. Both options
+        # are bigger than Phase 2 wants to chew. Returning None disables
+        # the button cleanly until we can do this properly in Phase 4
+        # alongside the targets-in-region API view.
         return None
 
     def nav_items(self):
-        # No navbar entry until the regions partial exists (Phase 2).
-        return []
+        # The "Regions" link is contributed via this partial; tom_common's
+        # ``{% navbar_app_addons %}`` template tag iterates each installed
+        # app's nav_items() and renders the returned partials in order.
+        # ``position`` defaults to "right" if omitted; we explicitly want
+        # "left" since the link is a primary navigation target rather
+        # than a user/account utility.
+        return [{"partial": f"{self.name}/partials/navbar_regions.html", "position": "left"}]
 
     def include_url_paths(self):
         # The URL include is wired up now even though urls.py exposes no
