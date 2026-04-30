@@ -98,7 +98,13 @@ def _regions_to_json(regions) -> str:
                 # handler in aladin_region_skymap.html and look up
                 # these fields per overlay when rendering the popup.
                 "n_tiles": region.n_tiles,
+                # Both units are sent so a future caller can use either;
+                # the popup renders square degrees because that's the
+                # astronomer-facing unit. ``area_sq_deg`` is a property
+                # on BaseRegion that wraps the conversion (see its
+                # docstring).
                 "area_sr": region.area_sr,
+                "area_sq_deg": region.area_sq_deg,
                 "type_display": region.get_type_display(),
                 "detail_url": reverse("regions:detail", kwargs={"pk": region.pk}),
             }

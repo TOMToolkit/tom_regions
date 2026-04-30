@@ -113,6 +113,21 @@ class BaseRegion(models.Model):
     def get_absolute_url(self) -> str:
         return reverse("regions:detail", kwargs={"pk": self.pk})
 
+    @property
+    def area_sq_deg(self) -> float | None:
+        """Cached area in square degrees, the user-facing unit.
+
+        ``area_sr`` on the database is steradians (SI). Astronomers
+        read sky areas in deg² nearly universally, so all UI surfaces
+        (list table, detail card, Aladin popup, filter inputs) convert
+        through this property. ``None`` for empty regions.
+        """
+        from tom_regions.healpix_django.constants import SQ_DEG_PER_STERADIAN
+
+        if self.area_sr is None:
+            return None
+        return self.area_sr * SQ_DEG_PER_STERADIAN
+
     # ------------------------------------------------------------------
     # Geometry helpers. Implementations live in tom_regions.utils so they
     # can be reused by forms, serializers, and admin actions without

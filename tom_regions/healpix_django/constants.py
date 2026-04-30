@@ -65,6 +65,13 @@ NPIX: int = 12 * (NSIDE * NSIDE)
 # Multiplied by ``upper - lower`` of an int8range, this gives a tile's area.
 PIXEL_AREA_STER: float = (4.0 * pi) / NPIX
 
+# Conversion from steradians to square degrees. ``area_sr`` on the
+# database side stays in SI units; the user-facing displays (table
+# column, detail card, Aladin popup, filter inputs) convert to
+# deg^2 because that's what astronomers reach for. The whole sky is
+# 4 * pi sr ~= 41,253 deg^2.
+SQ_DEG_PER_STERADIAN: float = (180.0 / pi) ** 2
+
 
 def shift_for_level(level: int) -> int:
     """Return the bit shift between order ``level`` and order :data:`LEVEL`.

@@ -36,9 +36,9 @@ here since there's no filter form on the page.
           <dt class="col-sm-5">Tiles</dt>
           <dd class="col-sm-7">{{ region.n_tiles }}</dd>
 
-          <dt class="col-sm-5">Area (sr)</dt>
+          <dt class="col-sm-5">Area (deg²)</dt>
           <dd class="col-sm-7">
-            {% if region.area_sr %}{{ region.area_sr|stringformat:".4e" }}{% else %}&mdash;{% endif %}
+            {% if region.area_sq_deg %}{{ region.area_sq_deg|floatformat:"-4" }}{% else %}&mdash;{% endif %}
           </dd>
 
           <dt class="col-sm-5">Max depth</dt>

@@ -204,9 +204,13 @@ Three things to understand here.
         }
 
         function _showRegionPopup(meta, x, y) {
-            var areaText = (meta.area_sr === null || meta.area_sr === undefined)
+            // Square degrees is the astronomer-facing area unit. The
+            // payload carries both area_sq_deg (for display) and
+            // area_sr (kept for future programmatic consumers) -- see
+            // _regions_to_json's docstring.
+            var areaText = (meta.area_sq_deg === null || meta.area_sq_deg === undefined)
                 ? '—'
-                : Number(meta.area_sr).toExponential(3) + ' sr';
+                : Number(meta.area_sq_deg).toPrecision(4) + ' deg²';
             popupBody.innerHTML =
                 '<strong>' + _escapeHtml(meta.name) + '</strong><br>' +
                 '<span class="text-muted small">' + _escapeHtml(meta.type_display) + '</span><hr class="my-1">' +

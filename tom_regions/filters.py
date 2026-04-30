@@ -143,16 +143,37 @@ class RegionFilterSet(HTMXTableFilterSet):
         widget=forms.Select(attrs=_HTMX_ON_CHANGE),
     )
 
-    area_sr_min = django_filters.NumberFilter(
-        field_name="area_sr",
-        lookup_expr="gte",
-        label="Min area (sr)",
+    # Area inputs are deg² (the astronomer-facing unit). The DB
+    # column is steradians, so each filter method does the conversion
+    # before applying the lookup. Using ``method=`` lets us keep the
+    # URL parameter / form-field name in deg² while the ORM stays in
+    # SI.
+    area_min_deg2 = django_filters.NumberFilter(
+        method="filter_area_min_deg2",
+        label="Min area (deg²)",
     )
-    area_sr_max = django_filters.NumberFilter(
-        field_name="area_sr",
-        lookup_expr="lte",
-        label="Max area (sr)",
+    area_max_deg2 = django_filters.NumberFilter(
+        method="filter_area_max_deg2",
+        label="Max area (deg²)",
     )
+
+    @staticmethod
+    def _deg2_to_sr(value):
+        from tom_regions.healpix_django.constants import SQ_DEG_PER_STERADIAN
+
+        # ``NumberFilter`` cleans the input to a Decimal; coerce to
+        # float before dividing by our (float) constant.
+        return float(value) / SQ_DEG_PER_STERADIAN
+
+    def filter_area_min_deg2(self, queryset, name, value):
+        if value is None:
+            return queryset
+        return queryset.filter(area_sr__gte=self._deg2_to_sr(value))
+
+    def filter_area_max_deg2(self, queryset, name, value):
+        if value is None:
+            return queryset
+        return queryset.filter(area_sr__lte=self._deg2_to_sr(value))
 
     # ------------------------------------------------------------------
     # Single-point filters: "which regions cover this point?"
@@ -349,8 +370,8 @@ class RegionFilterSet(HTMXTableFilterSet):
                     ),
                     Row(Column("cone_search", css_class="form-group col-md-12")),
                     Row(
-                        Column("area_sr_min", css_class="form-group col-md-3"),
-                        Column("area_sr_max", css_class="form-group col-md-3"),
+                        Column("area_min_deg2", css_class="form-group col-md-3"),
+                        Column("area_max_deg2", css_class="form-group col-md-3"),
                     ),
                     css_class=collapse_class,
                     css_id="advancedFilters",
@@ -368,8 +389,8 @@ class RegionFilterSet(HTMXTableFilterSet):
             "contains_point",
             "contains_target",
             "cone_search",
-            "area_sr_min",
-            "area_sr_max",
+            "area_min_deg2",
+            "area_max_deg2",
         ]
 
 

@@ -90,14 +90,32 @@ class RegionTable(HTMXTable):
     # routes to the region's detail view automatically.
     name = tables.Column(linkify=True, attrs={"a": {"hx-boost": "false"}})
 
+    # The DB column is steradians; the user-facing column is square
+    # degrees, which is what astronomers expect. The accessor still
+    # points at ``area_sr`` so DB-side ORDER BY keeps working (deg² is
+    # a linear transform of sr, so the row order is identical), and
+    # ``render_area`` does the unit conversion + formatting.
+    area = tables.Column(
+        accessor="area_sr",
+        verbose_name="Area (deg²)",
+    )
+
+    def render_area(self, value):
+        if value is None:
+            return "—"
+        from tom_regions.healpix_django.constants import SQ_DEG_PER_STERADIAN
+
+        # 4 significant figures spans the typical range from a small
+        # cone (~3 deg²) up to a LIGO localization (a few thousand
+        # deg²) without going to scientific notation.
+        return f"{value * SQ_DEG_PER_STERADIAN:.4g}"
+
     class Meta(HTMXTable.Meta):
         model = Region
-        # The columns shown on the list page. ``area_sr`` and ``n_tiles``
-        # come from the cached summary on Region, populated by
-        # :func:`tom_regions.utils.recompute_region_summary` whenever
-        # tiles are inserted. Showing them keeps the list useful at a
-        # glance; the detail page renders the full picture.
-        fields = ["selection", "name", "type", "area_sr", "n_tiles", "created"]
+        # ``area`` (renamed from area_sr) shows deg² via render_area.
+        # ``n_tiles`` and ``created`` come from the cached summary on
+        # Region; see :func:`tom_regions.utils.recompute_region_summary`.
+        fields = ["selection", "name", "type", "area", "n_tiles", "created"]
 
     # Override-point for the body-only template that htmx swaps in.
     # The full-page template (region_list.html) extends the TOM common
