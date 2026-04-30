@@ -2,7 +2,7 @@
 tom_regions/partials/aladin_region_skymap.html
 
 Initial-render Aladin Lite v3 viewer with one MOC overlay per region.
-Two things to understand here.
+Three things to understand here.
 
 1. The mocpy <-> Aladin contract.
    Each region's geometry is fetched from the URL stored in
@@ -10,22 +10,34 @@ Two things to understand here.
    returns the standard IVOA Multi-Order Coverage JSON shape:
    {"<order>": [<ipix>, ...], ...}. mocpy emits this via
    MOC.serialize(format='json'); Aladin Lite v3 consumes it via
-   A.MOCFromURL(...). Both libraries are first-class consumers of the
-   same IVOA standard, so the wire format is stable -- no custom
-   encoder lives in this codebase.
+   A.MOCFromJSON. Both libraries are first-class consumers of the same
+   IVOA standard, so the wire format is stable -- no custom encoder
+   lives in this codebase.
 
 2. The OOB (Out-of-Band) update pattern.
    The script below registers window.updateAladinRegions as a global
-   function. Subsequent HTMX-driven filter changes send back a small
-   partial (region_table_partial.html) plus an OOB <script> block
+   function. Subsequent HTMX-driven filter changes (and the in-place
+   save flow) send back a small partial plus an OOB <script> block
    (aladin_region_skymap_oob.html) that calls that function with the
    new region list. The Aladin canvas itself is never rebuilt; only
-   the MOCs change. This is the same pattern tom_targets uses for its
-   target-marker overlay.
+   the MOCs change.
+
+3. The window.tomRegions namespace.
+   The Save-MOC form section on the list page needs to enumerate
+   user-drawn MOC overlays (the ones Aladin auto-names "cone",
+   "poly_1", etc. when the user draws via Overlays > MOC > From
+   Selection) and remove them by name once they've been saved as
+   server-side Regions. Both are exposed here as window.tomRegions
+   so other partials can call them without poking at private state.
+
+   "User-drawn" overlays are distinguished from "Region overlays we
+   loaded for display" by a name prefix: anything we add via
+   updateAladinRegions is named "region-N (...)" -- see overlayName
+   below. Overlays that don't match that prefix are user-drawn.
 {% endcomment %}
 <div id="aladin-lite-div" style="width:auto; height:600px; margin:auto; margin-top: 20px;"></div>
 
-{# Hidden div that OOB swaps target on filter changes; the OOB partial replaces the inner script tag rather than this div. #}
+{# Hidden div that OOB swaps target on filter and save changes; the OOB partial replaces the inner script tag rather than this div. #}
 <div id="aladin-regions-data"></div>
 
 <script type="text/javascript">
@@ -61,55 +73,97 @@ Two things to understand here.
         });
         aladin.setCooGrid({ color: 'grey', labelSize: 10 });
 
-        // Registry of currently-displayed MOC overlays. v1 just holds
-        // references so the OOB update can drop them all and re-add
-        // the new set; a diff-based update is Phase 4 polish.
+        // Registry of overlay objects we (the server-driven side) added.
+        // The Save-MOC flow uses window.tomRegions.userMocOverlays()
+        // below to find overlays that *aren't* in this list -- those
+        // are the user-drawn ones eligible for saving.
         window.aladinRegionMOCs = [];
 
-        // Global function: replace the displayed MOC overlays with a
-        // new set. Called by the initial render below and by the OOB
-        // partial after every HTMX filter change.
-        //
-        // Each ``r`` carries: {id, name, moc_url, color}. We hand the
-        // moc_url to A.MOCFromURL, which fetches the IVOA MOC JSON we
-        // serve from regions:moc-json and returns a MOC overlay
-        // object; aladin.addMOC then attaches it to the viewer. Both
-        // calls are synchronous from JS's point of view; the MOC
-        // renders once the fetch completes.
-        window.updateAladinRegions = function(regions) {
+        // Names of region overlays we've added, for fast set-membership
+        // testing in userMocOverlays().
+        var regionOverlayNames = new Set();
+
+        // The ``A.MOCFromJSON`` factory + addMOC pattern. Server-rendered
+        // overlays go through here; user-drawn overlays come in via
+        // Aladin's own Overlays > MOC > From Selection menu.
+        function addRegionMOC(r) {
+            var name = 'region-' + r.id + ' (' + r.name + ')';
+            var moc = A.MOCFromJSON(r.moc_json, {
+                name: name,
+                color: r.color,
+                lineWidth: 2,
+                opacity: 0.4,
+            });
+            aladin.addMOC(moc);
+            window.aladinRegionMOCs.push(moc);
+            regionOverlayNames.add(name);
+        }
+
+        // Replace the displayed Region overlay set in place. Called by
+        // the initial render below and by the OOB partial on every
+        // HTMX filter change or in-place save.
+        window.updateAladinRegions = function (regions) {
             console.log('updateAladinRegions:', regions);
-            // Drop existing overlays. Aladin v3 exposes
-            // ``aladin.removeOverlay(overlayObject)`` to remove a
-            // specific instance.
-            window.aladinRegionMOCs.forEach(function(moc) {
+            window.aladinRegionMOCs.forEach(function (moc) {
                 try { aladin.removeOverlay(moc); } catch (e) { console.warn('removeOverlay failed:', e); }
             });
             window.aladinRegionMOCs = [];
-
-            regions.forEach(function(r) {
-                console.log('adding MOC for region', r.id, r.name);
-                // A.MOCFromURL is FITS-only; for our IVOA JSON dict we
-                // use A.MOCFromJSON. The dict is inlined in the page
-                // payload by tom_regions.templatetags.regions_extras
-                // (see _regions_to_json's docstring for the rationale).
-                //
-                // opacity semantics in Aladin Lite v3: opacity == 1
-                // draws *only* the outline; opacity < 1 fills the
-                // overlay. We use 0.4 so the region is visibly filled
-                // but the underlying sky survey still shows through.
-                var moc = A.MOCFromJSON(r.moc_json, {
-                    color: r.color,
-                    lineWidth: 2,
-                    opacity: 0.4,
-                });
-                aladin.addMOC(moc);
-                window.aladinRegionMOCs.push(moc);
-            });
+            regionOverlayNames = new Set();
+            regions.forEach(addRegionMOC);
         };
 
+        // Helpers exposed for the Save-MOC form section in
+        // aladin_save_moc_form.html.
+        window.tomRegions = {
+            // Return the array of MOC overlays currently on the canvas
+            // that we did *not* add ourselves. Aladin's
+            // getOverlays() returns a heterogeneous list (catalogs,
+            // MOCs, footprints), so we filter to objects that look
+            // like MOCs (have a .serialize method) and whose name
+            // isn't in our region-overlay set.
+            userMocOverlays: function () {
+                if (typeof aladin.getOverlays !== 'function') {
+                    console.warn('aladin.getOverlays unavailable; userMocOverlays is empty');
+                    return [];
+                }
+                var all = aladin.getOverlays() || [];
+                return all.filter(function (o) {
+                    if (!o || typeof o.serialize !== 'function') return false;
+                    var n = o.name || '';
+                    return !regionOverlayNames.has(n);
+                });
+            },
+
+            // Remove a user-drawn overlay by name. Falls back to
+            // iterating getOverlays() since v3 doesn't document a
+            // remove-by-name shortcut. No-ops gracefully if the
+            // overlay no longer exists.
+            removeOverlayByName: function (name) {
+                if (!name) return;
+                var hits = (aladin.getOverlays() || []).filter(function (o) {
+                    return o && o.name === name;
+                });
+                hits.forEach(function (o) {
+                    try { aladin.removeOverlay(o); } catch (e) {
+                        console.warn('removeOverlayByName failed:', name, e);
+                    }
+                });
+            },
+        };
+
+        // Auto-refresh the Save-MOC dropdown whenever Aladin's overlay
+        // stack changes (a user just drew a new MOC, or removed one).
+        // The dropdown owns its own refreshOverlayDropdown() function
+        // (see aladin_save_moc_form.html); we invoke it if present.
+        if (typeof aladin.on === 'function') {
+            aladin.on('stackChanged', function () {
+                if (window.tomRegions && typeof window.tomRegions.refreshOverlayDropdown === 'function') {
+                    window.tomRegions.refreshOverlayDropdown();
+                }
+            });
+        }
+
         // Initial overlay set from the server-rendered context.
-        // Subsequent changes flow through updateAladinRegions via the
-        // OOB partial.
         updateAladinRegions({{ regions_json|safe }});
     });
 })();

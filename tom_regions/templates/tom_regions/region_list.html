@@ -23,11 +23,24 @@ relevant to the page's purpose).
 <div class="row">
   <div class="col-md-12">
 
-    {# Heading row. Phase 3 will add a "Create Region" dropdown. #}
+    {% comment %}
+    Heading row with Create Region dropdown (one item per Phase 3
+    create mode). Each link routes to /regions/create/?type=<mode>;
+    the view picks the right form class and the template renders
+    the right input set.
+    {% endcomment %}
     <div class="row">
       <div class="col-md-12">
         <span class="float-right">
-          {{ region_count }} Region{{ region_count|pluralize }}
+          {{ region_count }} Region{{ region_count|pluralize }} &nbsp;
+          {% comment %}
+          Hand-drawn regions go through the in-page Save-MOC form below
+          the Aladin viewer; this button covers only the remaining
+          "import a pre-built MOC" path.
+          {% endcomment %}
+          <a class="btn btn-primary" href="{% url 'regions:create' %}?type=upload">
+            Upload MOC FITS
+          </a>
         </span>
         <h2>Regions</h2>
       </div>
@@ -35,6 +48,13 @@ relevant to the page's purpose).
 
     {# Aladin viewer + initial MOC overlay set; OOB updates flow through region_table_partial.html. #}
     {% aladin_region_skymap skymap_objects %}
+
+    {% comment %}
+    Save-MOC form section: harvests user-drawn MOCs from Aladin's
+    "Overlays > MOC > From Selection" menu and persists them as
+    Regions in place. See aladin_save_moc_form.html for details.
+    {% endcomment %}
+    {% include "tom_regions/partials/aladin_save_moc_form.html" %}
 
     <hr>
 

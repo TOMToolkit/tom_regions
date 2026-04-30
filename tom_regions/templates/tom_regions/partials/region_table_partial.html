@@ -30,4 +30,10 @@ description of this pattern.
 {% endif %}
 
 {% load regions_extras %}
-{% aladin_region_skymap_oob skymap_objects %}
+{% comment %}
+``aladin_overlay_name_to_remove`` is set by RegionSaveFromAladinView's
+success response so the pre-save Aladin overlay gets cleared before
+the saved version is added back. The list view's filter path leaves
+it unset, which the |default filter handles.
+{% endcomment %}
+{% aladin_region_skymap_oob skymap_objects aladin_overlay_name_to_remove|default:"" %}

@@ -110,7 +110,7 @@ def aladin_region_skymap(regions):
 
 
 @register.inclusion_tag("tom_regions/partials/aladin_region_skymap_oob.html")
-def aladin_region_skymap_oob(regions):
+def aladin_region_skymap_oob(regions, remove_name: str = ""):
     """Emit an OOB script updating the Aladin overlay to a new region set.
 
     Mirrors :func:`tom_targets.templatetags.targets_extras.aladin_skymap_targets_oob`.
@@ -118,5 +118,15 @@ def aladin_region_skymap_oob(regions):
     this OOB block; the browser swaps the table contents in place and
     runs the script, which calls ``window.updateAladinRegions`` (set up
     by the initial-render template) to refresh the overlay.
+
+    The optional ``remove_name`` argument is the Aladin overlay name
+    to drop from the canvas before applying the update. The "Save MOC"
+    flow uses it to clear the user's pre-save (auto-named) MOC overlay
+    once the saved version is about to be added back under the user's
+    chosen name. The regular filter-update path leaves it empty and
+    the JS skips the remove step.
     """
-    return {"regions_json": _regions_to_json(regions)}
+    return {
+        "regions_json": _regions_to_json(regions),
+        "remove_name": remove_name,
+    }

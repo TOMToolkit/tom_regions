@@ -1,0 +1,250 @@
+{% comment %}
+tom_regions/partials/aladin_save_moc_form.html
+
+The "Save MOC" form section that lives on the regions list page,
+between the Aladin viewer and the filter form. It harvests a MOC the
+user has drawn inside Aladin's own *Overlays > MOC > From Selection*
+menu and persists it as a Region.
+
+The flow:
+1. User draws a MOC in Aladin's UI; Aladin auto-names it (e.g. "cone").
+2. window.tomRegions.refreshOverlayDropdown() (registered below) runs
+   whenever Aladin's stack changes (or when the user clicks Refresh)
+   and repopulates the <select> with the names of MOC overlays
+   currently on the canvas, filtered to user-drawn ones (i.e.,
+   excluding the ones we ourselves loaded for the existing regions).
+3. The user picks one; the change handler tries to pre-fill the Name
+   field with Aladin's name -- unless that name already exists as a
+   Region in the database (server-rendered list in
+   data-existing-region-names), in which case it leaves the Name
+   field empty so the user must choose a fresh value.
+4. On submit, the hidden ``moc_json`` field is filled by calling
+   .serialize('json') on the chosen overlay; HTMX then posts to
+   regions:save-aladin-moc. The server returns the updated table
+   partial (with its built-in OOB) which removes the pre-save Aladin
+   overlay and adds the saved version back under its new name.
+
+The server-injected ``existing_region_names_json`` carries the current
+set of Region.name values, JSON-encoded. It can go stale between page
+load and save, which is fine: the server-side uniqueness constraint
+catches the race condition.
+{% endcomment %}
+
+<div id="save-moc-panel" class="card my-3"
+     data-existing-region-names='{{ existing_region_names_json|default:"[]"|safe }}'>
+  {% comment %}
+  Collapsible card: the body is hidden until the user clicks the
+  header. Bootstrap 4's data-toggle="collapse" handles the toggle
+  itself. The aria-expanded state plus a tiny CSS hook (the
+  ``.save-moc-toggle.collapsed`` selector) flips the chevron between
+  pointing-right (folded) and pointing-down (open).
+  {% endcomment %}
+  <div class="card-header save-moc-toggle collapsed"
+       data-toggle="collapse"
+       data-target="#save-moc-body"
+       aria-expanded="false"
+       aria-controls="save-moc-body"
+       style="cursor: pointer;">
+    <span class="save-moc-chevron">&rsaquo;</span>
+    Save a MOC drawn in Aladin
+  </div>
+  <div id="save-moc-body" class="collapse">
+  <div class="card-body">
+    <p class="text-muted small mb-2">
+      Draw a region in Aladin via <em>Overlays &rsaquo; MOC &rsaquo; From Selection</em>
+      (Circle / Rect / Polygon). It will appear in the dropdown below.
+      Pick one, choose a name, and save.
+    </p>
+
+    <form id="save-moc-form" method="post"
+          hx-post="{% url 'regions:save-aladin-moc' %}"
+          hx-target="div.table-container"
+          hx-swap="outerHTML">
+      {% csrf_token %}
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="aladin-overlay-select">Aladin overlay</label>
+          <div class="input-group">
+            <select id="aladin-overlay-select" name="aladin_overlay_name" class="form-control">
+              <option value="">(no MOC overlay yet)</option>
+            </select>
+            <div class="input-group-append">
+              <button type="button" id="aladin-overlay-refresh"
+                      class="btn btn-outline-secondary"
+                      title="Re-query Aladin's overlay panel">Refresh</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="save-moc-name">Name</label>
+          <input id="save-moc-name" name="name" type="text" class="form-control" required
+                 placeholder="(set on overlay choice; rename here)">
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="save-moc-description">Description</label>
+          <input id="save-moc-description" name="description" type="text" class="form-control">
+        </div>
+      </div>
+
+      {% comment %}
+      moc_json is filled by JS at submit time from
+      aladin.getOverlays()[i].serialize('json'). The value lives only
+      in this hidden input until form submission, then in the HTTP
+      request body, then in the server's parsed dict; nothing touches
+      disk until bulk_create_tiles writes range rows to PostgreSQL.
+      {% endcomment %}
+      <input type="hidden" name="moc_json" id="save-moc-json">
+
+      <button type="submit" class="btn btn-primary">Save Region</button>
+      <span id="save-moc-status" class="ml-2 text-muted small"></span>
+    </form>
+  </div>
+  </div>{# /#save-moc-body collapse wrapper #}
+</div>
+
+<style>
+/* Chevron points right when the card is folded, rotates 90deg when open.
+   Bootstrap 4 toggles the ``.collapsed`` class on the data-toggle
+   element to track state. */
+.save-moc-toggle .save-moc-chevron {
+  display: inline-block;
+  transition: transform 0.15s ease-in-out;
+  transform: rotate(90deg);  /* unfolded: pointing down */
+  margin-right: 0.25rem;
+}
+.save-moc-toggle.collapsed .save-moc-chevron {
+  transform: rotate(0deg);   /* folded: pointing right */
+}
+</style>
+
+<script>
+(function () {
+    var panel = document.getElementById('save-moc-panel');
+    var select = document.getElementById('aladin-overlay-select');
+    var refreshBtn = document.getElementById('aladin-overlay-refresh');
+    var nameInput = document.getElementById('save-moc-name');
+    var jsonInput = document.getElementById('save-moc-json');
+    var form = document.getElementById('save-moc-form');
+    var status = document.getElementById('save-moc-status');
+
+    // Snapshot of existing Region.name values, server-injected at page
+    // load. Used to decide whether the user's chosen overlay's auto-
+    // name is safe to pre-fill into the Name input. Race conditions
+    // beyond this snapshot are handled by the server's uniqueness
+    // constraint on Region.name.
+    var existingRegionNames;
+    try {
+        existingRegionNames = new Set(JSON.parse(panel.dataset.existingRegionNames || '[]'));
+    } catch (e) {
+        console.warn('failed to parse existing-region-names JSON:', e);
+        existingRegionNames = new Set();
+    }
+
+    // Populate the dropdown with the names of user-drawn MOC overlays.
+    // Called on initial load (once Aladin is ready), on Aladin's
+    // stackChanged event, and on the Refresh button.
+    function refreshOverlayDropdown() {
+        if (!window.tomRegions || typeof window.tomRegions.userMocOverlays !== 'function') {
+            // Aladin not ready yet; the polling loop below retries.
+            return;
+        }
+        var overlays = window.tomRegions.userMocOverlays();
+        var prevValue = select.value;
+        // Replace options; keep the empty placeholder when none.
+        select.innerHTML = '';
+        if (overlays.length === 0) {
+            var opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = '(no user-drawn MOC overlays yet)';
+            select.appendChild(opt);
+        } else {
+            overlays.forEach(function (o) {
+                var opt = document.createElement('option');
+                opt.value = o.name || '';
+                opt.textContent = o.name || '(unnamed)';
+                select.appendChild(opt);
+            });
+            // Restore prior selection if it still exists, else pick the
+            // last overlay (typically the most recently drawn).
+            if (Array.from(select.options).some(function (o) { return o.value === prevValue; })) {
+                select.value = prevValue;
+            } else {
+                select.selectedIndex = select.options.length - 1;
+                // Trigger the change handler so the Name field
+                // pre-fills against the new selection.
+                select.dispatchEvent(new Event('change'));
+            }
+        }
+    }
+
+    // Pre-fill the Name input from the chosen overlay's Aladin name,
+    // unless that name already exists as a Region (in which case we
+    // leave it blank so the user must rename).
+    select.addEventListener('change', function () {
+        var name = select.value;
+        if (!name) {
+            nameInput.value = '';
+            return;
+        }
+        if (existingRegionNames.has(name)) {
+            nameInput.value = '';
+            status.textContent =
+                'A region named "' + name + '" already exists -- pick a different name.';
+        } else {
+            nameInput.value = name;
+            status.textContent = '';
+        }
+    });
+
+    refreshBtn.addEventListener('click', refreshOverlayDropdown);
+
+    // Hook the submit: locate the chosen overlay, serialize its MOC,
+    // stuff the IVOA JSON into the hidden field. We do this on the
+    // ``submit`` event (not via HTMX's hx-vals) so we can serialize
+    // synchronously just before the request goes out.
+    form.addEventListener('submit', function (event) {
+        var name = select.value;
+        if (!name) {
+            event.preventDefault();
+            status.textContent = 'No overlay chosen.';
+            return;
+        }
+        var overlays = window.tomRegions.userMocOverlays();
+        var match = overlays.find(function (o) { return o.name === name; });
+        if (!match) {
+            event.preventDefault();
+            status.textContent = 'Overlay "' + name + '" no longer exists in Aladin -- click Refresh.';
+            return;
+        }
+        try {
+            var ivoa = match.serialize('json');
+            // .serialize('json') may return either a string or a parsed
+            // object depending on the Aladin Lite minor version. The
+            // server expects a JSON-string body, so re-stringify if we
+            // got an object.
+            jsonInput.value = (typeof ivoa === 'string') ? ivoa : JSON.stringify(ivoa);
+        } catch (e) {
+            event.preventDefault();
+            console.error('serialize() failed:', e);
+            status.textContent = 'Could not serialize the chosen overlay (see console).';
+            return;
+        }
+    });
+
+    // Register refreshOverlayDropdown on the global tomRegions namespace
+    // so the Aladin partial's stackChanged hook can invoke it. We poll
+    // until window.tomRegions exists since Aladin boots asynchronously.
+    function attachRefreshHook() {
+        if (window.tomRegions) {
+            window.tomRegions.refreshOverlayDropdown = refreshOverlayDropdown;
+            refreshOverlayDropdown();
+            return;
+        }
+        setTimeout(attachRefreshHook, 200);
+    }
+    attachRefreshHook();
+})();
+</script>
