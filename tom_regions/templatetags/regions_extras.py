@@ -92,6 +92,15 @@ def _regions_to_json(regions) -> str:
                 "moc_url": reverse("regions:moc-json", kwargs={"pk": region.pk}),
                 "moc_json": region_to_moc_json(region),
                 "color": _REGION_COLORS[index % len(_REGION_COLORS)],
+                # Metadata for the click-to-popup affordance on the
+                # canvas. Aladin's built-in marker popup only fires
+                # for catalog markers, so we wire our own click
+                # handler in aladin_region_skymap.html and look up
+                # these fields per overlay when rendering the popup.
+                "n_tiles": region.n_tiles,
+                "area_sr": region.area_sr,
+                "type_display": region.get_type_display(),
+                "detail_url": reverse("regions:detail", kwargs={"pk": region.pk}),
             }
         )
     return json.dumps(payload)

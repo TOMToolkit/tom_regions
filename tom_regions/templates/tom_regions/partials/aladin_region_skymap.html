@@ -35,7 +35,25 @@ Three things to understand here.
    updateAladinRegions is named "region-N (...)" -- see overlayName
    below. Overlays that don't match that prefix are user-drawn.
 {% endcomment %}
-<div id="aladin-lite-div" style="width:auto; height:600px; margin:auto; margin-top: 20px;"></div>
+<div id="aladin-lite-div" style="width:auto; height:600px; margin:auto; margin-top: 20px; position: relative;">
+    {% comment %}
+    Click-to-inspect popup. Hidden by default; the click handler in the
+    script below positions it at the click coordinates and fills in the
+    region metadata. ``position: relative`` on the parent so the
+    absolutely-positioned popup pins to the canvas, not the viewport.
+    {% endcomment %}
+    <div id="region-moc-popup"
+         style="display:none; position:absolute; z-index:1000; min-width:200px;
+                background:white; border:1px solid rgba(0,0,0,0.2); border-radius:4px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.3); padding:0.5rem 0.75rem; font-size:0.85rem;">
+        <button type="button" class="close" aria-label="Close"
+                id="region-moc-popup-close"
+                style="position:absolute; top:4px; right:8px;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div id="region-moc-popup-body"></div>
+    </div>
+</div>
 
 {# Hidden div that OOB swaps target on filter and save changes; the OOB partial replaces the inner script tag rather than this div. #}
 <div id="aladin-regions-data"></div>
@@ -74,6 +92,8 @@ Three things to understand here.
         aladin.setCooGrid({ color: 'grey', labelSize: 10 });
 
         // Registry of overlay objects we (the server-driven side) added.
+        // Each entry: { moc, meta } where ``meta`` carries the per-region
+        // metadata the click-popup needs (name, tile count, area, etc.).
         // The Save-MOC flow uses window.tomRegions.userMocOverlays()
         // below to find overlays that *aren't* in this list -- those
         // are the user-drawn ones eligible for saving.
@@ -95,7 +115,7 @@ Three things to understand here.
                 opacity: 0.4,
             });
             aladin.addMOC(moc);
-            window.aladinRegionMOCs.push(moc);
+            window.aladinRegionMOCs.push({ moc: moc, meta: r });
             regionOverlayNames.add(name);
         }
 
@@ -104,8 +124,8 @@ Three things to understand here.
         // HTMX filter change or in-place save.
         window.updateAladinRegions = function (regions) {
             console.log('updateAladinRegions:', regions);
-            window.aladinRegionMOCs.forEach(function (moc) {
-                try { aladin.removeOverlay(moc); } catch (e) { console.warn('removeOverlay failed:', e); }
+            window.aladinRegionMOCs.forEach(function (entry) {
+                try { aladin.removeOverlay(entry.moc); } catch (e) { console.warn('removeOverlay failed:', e); }
             });
             window.aladinRegionMOCs = [];
             regionOverlayNames = new Set();
@@ -161,6 +181,70 @@ Three things to understand here.
                     window.tomRegions.refreshOverlayDropdown();
                 }
             });
+        }
+
+        // Click-to-inspect popup. Aladin Lite v3 fires a ``click``
+        // event on canvas clicks; the payload (per the v3 docs) carries
+        // sky coordinates (.ra/.dec) plus pixel coordinates (.x/.y).
+        // We test each currently-displayed Region MOC with
+        // moc.contains(ra, dec) and, on the first hit, render a small
+        // popup at the click position with the region's metadata.
+        // Aladin doesn't support per-MOC click events natively, so
+        // this hand-rolled hit test is the simplest way to recreate
+        // the marker-popup affordance for MOCs.
+        var popup = document.getElementById('region-moc-popup');
+        var popupBody = document.getElementById('region-moc-popup-body');
+        document.getElementById('region-moc-popup-close')
+            .addEventListener('click', function () { popup.style.display = 'none'; });
+
+        function _escapeHtml(s) {
+            var div = document.createElement('div');
+            div.textContent = (s == null) ? '' : String(s);
+            return div.innerHTML;
+        }
+
+        function _showRegionPopup(meta, x, y) {
+            var areaText = (meta.area_sr === null || meta.area_sr === undefined)
+                ? '—'
+                : Number(meta.area_sr).toExponential(3) + ' sr';
+            popupBody.innerHTML =
+                '<strong>' + _escapeHtml(meta.name) + '</strong><br>' +
+                '<span class="text-muted small">' + _escapeHtml(meta.type_display) + '</span><hr class="my-1">' +
+                'Tiles: ' + meta.n_tiles + '<br>' +
+                'Area: ' + areaText + '<br>' +
+                '<a href="' + meta.detail_url + '">Detail page &rsaquo;</a>';
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+            popup.style.display = 'block';
+        }
+
+        function _handleAladinClick(payload) {
+            if (!payload) { popup.style.display = 'none'; return; }
+            var ra = payload.ra, dec = payload.dec;
+            if (ra === undefined || dec === undefined) {
+                popup.style.display = 'none';
+                return;
+            }
+            var hit = window.aladinRegionMOCs.find(function (entry) {
+                try {
+                    return entry.moc && typeof entry.moc.contains === 'function'
+                        && entry.moc.contains(ra, dec);
+                } catch (e) {
+                    console.warn('moc.contains failed:', e);
+                    return false;
+                }
+            });
+            if (!hit) {
+                popup.style.display = 'none';
+                return;
+            }
+            var x = (payload.x !== undefined) ? payload.x : 16;
+            var y = (payload.y !== undefined) ? payload.y : 16;
+            _showRegionPopup(hit.meta, x, y);
+        }
+
+        if (typeof aladin.on === 'function') {
+            aladin.on('click', _handleAladinClick);
         }
 
         // Initial overlay set from the server-rendered context.

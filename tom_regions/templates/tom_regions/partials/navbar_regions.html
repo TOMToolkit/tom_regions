@@ -1,14 +1,18 @@
 {% comment %}
 Navbar entry contributed by tom_regions via TomRegionsConfig.nav_items().
 Rendered by tom_common's navbar_content.html through the
-{% navbar_app_addons %} template tag, which calls each installed app's
-nav_items() hook and renders the returned partials in order.
+{% navbar_app_addons %} template tag.
 
-The link is "active" when any URL in the regions namespace is being
-served, mirroring how the Targets and Observations entries highlight
-themselves. Single link rather than a dropdown for now -- a dropdown
-makes sense once create / detail / region-grouping pages exist (Phase 3).
+The dropdown surfaces the two top-level pages: the regions list
+(/regions/) and the grouping list (/regions/grouping/). The "active"
+class lights up when any URL in the regions namespace is being
+served, mirroring the Targets and Observations dropdown behavior.
 {% endcomment %}
-<li class="nav-item {% if request.resolver_match.namespace == 'regions' %}active{% endif %}">
-    <a class="nav-link" href="{% url 'regions:list' %}">Regions</a>
+<li class="nav-item dropdown {% if request.resolver_match.namespace == 'regions' %}active{% endif %}">
+  <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+     aria-haspopup="true" aria-expanded="false">Regions</a>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="{% url 'regions:list' %}">Regions</a>
+    <a class="dropdown-item" href="{% url 'regions:grouping' %}">Region Grouping</a>
+  </div>
 </li>

@@ -1,0 +1,26 @@
+{% extends 'tom_common/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Delete grouping {{ object.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h2>Delete region grouping "{{ object.name }}"?</h2>
+    <p class="text-muted">
+      This removes the grouping itself; the
+      {{ object.regions.count }} member region{{ object.regions.count|pluralize }}
+      remain in the database. (To delete a region, use the Delete button
+      on its detail page.)
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="btn-group" role="group">
+        <a href="{% url 'regions:grouping' %}" class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Delete grouping</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

@@ -56,6 +56,67 @@ relevant to the page's purpose).
     {% endcomment %}
     {% include "tom_regions/partials/aladin_save_moc_form.html" %}
 
+    {% comment %}
+    Grouping form: Add / Move / Remove the rows whose checkboxes are
+    ticked into the selected RegionList. The hidden ``query_string``
+    round-trips the active filter form so the redirect lands the user
+    back on the same filtered view. Hidden when no groupings exist or
+    the user is anonymous.
+    {% endcomment %}
+    {% if groupings %}
+    <form id="grouping-form" action="{% url 'regions:add-remove-grouping' %}" method="POST" class="my-3">
+      {% csrf_token %}
+      <div class="form-group d-flex flex-row align-items-baseline">
+        <label class="mr-2">Add / Move / Remove from grouping</label>
+        <select name="grouping" class="form-control w-25 mr-2">
+          {% for grouping in groupings %}
+          <option value="{{ grouping.id }}">{{ grouping.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="hidden" value="{{ query_string }}" name="query_string">
+        <input type="hidden" value="False" id="isSelectAll" name="isSelectAll">
+        {% comment %}
+        Disabled by default; the JS below enables them as soon as at
+        least one row checkbox is ticked, and disables again after the
+        table is re-rendered by an HTMX filter swap.
+        {% endcomment %}
+        <button type="submit" name="add" class="btn btn-outline-primary mr-1 grouping-action-btn" disabled>Add</button>
+        <button type="submit" name="move" class="btn btn-outline-primary mr-1 grouping-action-btn" disabled>Move</button>
+        <button type="submit" name="remove" class="btn btn-outline-danger grouping-action-btn" disabled>Remove</button>
+      </div>
+    </form>
+
+    <script>
+    (function () {
+      // Enable the Add / Move / Remove buttons only when at least one
+      // row in the table is selected. The buttons start disabled (set
+      // server-side) and we toggle them based on the live checkbox
+      // state. The selected-region checkboxes live in the table inside
+      // div.table-container, which HTMX swaps wholesale on filter
+      // changes -- so we use event delegation on document.body to keep
+      // working across swaps.
+      function updateGroupingButtons() {
+        var n = document.querySelectorAll('input[name="selected-region"]:checked').length;
+        document.querySelectorAll('.grouping-action-btn').forEach(function (btn) {
+          btn.disabled = (n === 0);
+        });
+      }
+      document.body.addEventListener('change', function (e) {
+        if (!e.target) return;
+        // Either a row checkbox or the header-checkbox toggling all rows.
+        if (e.target.name === 'selected-region'
+            || e.target.classList.contains('header-checkbox')) {
+          updateGroupingButtons();
+        }
+      });
+      // After any HTMX swap (table refresh on filter change) the
+      // checkbox state resets; re-evaluate to put buttons back to disabled.
+      document.body.addEventListener('htmx:afterSwap', updateGroupingButtons);
+      updateGroupingButtons();
+    })();
+    </script>
+    {% endif %}
+
     <hr>
 
     {# Filter form rendered by crispy-forms; HTMX attrs on individual widgets drive the refresh. #}

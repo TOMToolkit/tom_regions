@@ -61,7 +61,7 @@ from django.db.models import Q
 from tom_common.htmx_table import HTMXTableFilterSet
 from tom_regions.base_models import REGION_TYPE_CHOICES
 from tom_regions.healpix_django.encoding import skycoord_to_point
-from tom_regions.models import Region
+from tom_regions.models import Region, RegionList
 
 logger = logging.getLogger(__name__)
 
@@ -121,6 +121,25 @@ class RegionFilterSet(HTMXTableFilterSet):
 
     type = django_filters.ChoiceFilter(
         choices=REGION_TYPE_CHOICES,
+        widget=forms.Select(attrs=_HTMX_ON_CHANGE),
+    )
+
+    # ``regionlist__name`` is kept as the URL parameter / Python
+    # attribute name to match the tom_targets convention (so a URL
+    # like /regions/?regionlist__name=42 reads the same as
+    # /targets/?targetlist__name=42). The actual ORM lookup is on
+    # ``region_lists`` -- the related_name we set on the M2M, which
+    # Django uses for both the reverse accessor and reverse lookups.
+    # The form sends a RegionList instance; Django's ORM coerces that
+    # to a pk for the M2M membership test.
+    regionlist__name = django_filters.ModelChoiceFilter(
+        field_name="region_lists",
+        queryset=lambda request: (
+            RegionList.objects.all()
+            if request.user.is_authenticated
+            else RegionList.objects.none()
+        ),
+        label="Region Group",
         widget=forms.Select(attrs=_HTMX_ON_CHANGE),
     )
 
@@ -289,25 +308,40 @@ class RegionFilterSet(HTMXTableFilterSet):
             helper.form_tag = False
             helper.disable_csrf = True
             helper.form_show_labels = True
+
+            # If the user arrived with any advanced filter already
+            # populated in the URL, leave the Advanced section open so
+            # they can see what's filtering. Otherwise fold it for a
+            # clean default appearance. ``self.data`` is the bound GET
+            # QueryDict; an empty value (None or "") doesn't count as
+            # "in use."
+            advanced_in_use = any(
+                self._form.data.get(name) for name in self.Meta.fields
+            )
+            collapse_class = "collapse show" if advanced_in_use else "collapse"
+            aria_expanded = "true" if advanced_in_use else "false"
+
+            # The Advanced toggle link's class controls Bootstrap's
+            # chevron / state CSS hooks: the ``collapsed`` class flags
+            # "currently folded" so any future styling can rotate a
+            # caret consistently with the save-MOC card.
+            toggle_html = (
+                f'<div class="row"><div class="col-md-12 mb-2">'
+                f'<a class="btn btn-link p-0'
+                f'{"" if advanced_in_use else " collapsed"}" '
+                f'data-toggle="collapse" href="#advancedFilters" role="button" '
+                f'aria-expanded="{aria_expanded}" aria-controls="advancedFilters">'
+                f'Advanced &rsaquo;</a></div></div>'
+            )
+
             helper.layout = Layout(
                 Row(Column("query", css_class="form-group col-md-3")),
-                HTML(
-                    """
-                    <div class="row">
-                      <div class="col-md-12 mb-2">
-                        <a class="btn btn-link p-0" data-toggle="collapse"
-                           href="#advancedFilters" role="button"
-                           aria-expanded="false" aria-controls="advancedFilters">
-                          Advanced &rsaquo;
-                        </a>
-                      </div>
-                    </div>
-                    """
-                ),
+                HTML(toggle_html),
                 Div(
                     Row(
                         Column("name", css_class="form-group col-md-4"),
                         Column("type", css_class="form-group col-md-4"),
+                        Column("regionlist__name", css_class="form-group col-md-4"),
                     ),
                     Row(
                         Column("contains_point", css_class="form-group col-md-6"),
@@ -318,7 +352,7 @@ class RegionFilterSet(HTMXTableFilterSet):
                         Column("area_sr_min", css_class="form-group col-md-3"),
                         Column("area_sr_max", css_class="form-group col-md-3"),
                     ),
-                    css_class="collapse",
+                    css_class=collapse_class,
                     css_id="advancedFilters",
                 ),
             )
@@ -330,9 +364,23 @@ class RegionFilterSet(HTMXTableFilterSet):
         fields = [
             "name",
             "type",
+            "regionlist__name",
             "contains_point",
             "contains_target",
             "cone_search",
             "area_sr_min",
             "area_sr_max",
         ]
+
+
+class RegionGroupFilterSet(HTMXTableFilterSet):
+    """Bare-bones FilterSet for the Region Grouping list page.
+
+    Inherits the ``query`` general-search field from
+    :class:`HTMXTableFilterSet` and adds nothing. Mirrors
+    :class:`tom_targets.filters.TargetGroupFilterSet`.
+    """
+
+    class Meta:
+        model = RegionList
+        fields: list = []

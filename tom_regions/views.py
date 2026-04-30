@@ -32,10 +32,15 @@ from django.views.generic import CreateView, DeleteView, DetailView, View
 from django_filters.views import FilterView
 
 from tom_common.htmx_table import HTMXTableViewMixin
-from tom_regions.filters import RegionFilterSet
+from tom_regions.filters import RegionFilterSet, RegionGroupFilterSet
 from tom_regions.forms import RegionFromAladinForm, RegionMOCUploadForm
-from tom_regions.models import Region
-from tom_regions.tables import RegionTable
+from tom_regions.groups import (
+    add_selected_to_grouping,
+    move_selected_to_grouping,
+    remove_selected_from_grouping,
+)
+from tom_regions.models import Region, RegionList
+from tom_regions.tables import RegionGroupTable, RegionTable
 from tom_regions.utils import region_to_moc_json
 
 
@@ -103,6 +108,19 @@ class RegionListView(HTMXTableViewMixin, FilterView):
         context["existing_region_names_json"] = json.dumps(
             list(Region.objects.values_list("name", flat=True))
         )
+        # Region groupings drive the on-page Add/Move/Remove select.
+        # Empty for anonymous users; the dropdown is hidden by the
+        # template when the queryset is empty.
+        context["groupings"] = (
+            RegionList.objects.all()
+            if self.request.user.is_authenticated
+            else RegionList.objects.none()
+        )
+        # The grouping form needs to round-trip the active filters so
+        # "Add all to group" can re-construct the same filtered set
+        # server-side. The query string from the original request goes
+        # into a hidden form field.
+        context["query_string"] = self.request.GET.urlencode()
         return context
 
 
@@ -136,6 +154,16 @@ class RegionDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["region_singleton"] = [self.object]
+        # Per-region groups card. ``groups`` are the RegionLists this
+        # region belongs to; ``all_groupings`` populates the "Add to"
+        # select so the user can attach it to a different group from
+        # the detail page.
+        context["groups"] = self.object.region_lists.all()
+        context["all_groupings"] = (
+            RegionList.objects.all()
+            if self.request.user.is_authenticated
+            else RegionList.objects.none()
+        )
         return context
 
 
@@ -372,3 +400,91 @@ class RegionSaveFromAladinView(LoginRequiredMixin, View):
             request=request,
         )
         return HttpResponseBadRequest(body)
+
+
+# ---------------------------------------------------------------------------
+# RegionList ("region grouping") views.
+#
+# These mirror the tom_targets equivalents (TargetGroupingView,
+# TargetGroupingCreateView, TargetGroupingDeleteView,
+# TargetAddRemoveGroupingView) without the django-guardian permission
+# layer -- v1 of tom_regions intentionally has no per-object permissions.
+# ---------------------------------------------------------------------------
+
+
+class RegionGroupingView(HTMXTableViewMixin, FilterView):
+    """List view for :class:`RegionList` objects (region groups).
+
+    HTMX-driven, paginated. The Create New Grouping button at the top
+    routes to :class:`RegionGroupingCreateView`; per-row Delete buttons
+    route to :class:`RegionGroupingDeleteView`. Both are inline links
+    rendered by :class:`tom_regions.tables.RegionGroupTable`.
+    """
+
+    template_name = "tom_regions/region_grouping.html"
+    model = RegionList
+    table_class = RegionGroupTable
+    filterset_class = RegionGroupFilterSet
+    paginate_by = 20
+    ordering = ["name"]
+
+
+class RegionGroupingCreateView(LoginRequiredMixin, CreateView):
+    """Create a new (empty) :class:`RegionList`.
+
+    Single-field form (the group's name). After save, redirects back
+    to the grouping list page. No initial regions: the user adds
+    those from the regions list page via the Add/Move/Remove form.
+    """
+
+    model = RegionList
+    fields = ["name"]
+    success_url = reverse_lazy("regions:grouping")
+    template_name = "tom_regions/regiongroup_form.html"
+
+
+class RegionGroupingDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete a :class:`RegionList`.
+
+    Removes the group itself; the member regions are unaffected (the
+    M2M just loses its rows). Redirects back to the grouping list.
+    """
+
+    model = RegionList
+    success_url = reverse_lazy("regions:grouping")
+    template_name = "tom_regions/regiongroup_confirm_delete.html"
+
+
+class RegionAddRemoveGroupingView(LoginRequiredMixin, View):
+    """POST endpoint for the regions list page's Add/Move/Remove buttons.
+
+    The form's submit button name (``add`` / ``move`` / ``remove``)
+    selects the action. ``selected-region`` holds the checked-row pks;
+    ``grouping`` is the destination RegionList id; ``query_string``
+    round-trips the active filters so the redirect lands the user
+    back where they started.
+    """
+
+    def post(self, request, *args, **kwargs):
+        from django.contrib import messages
+        from django.shortcuts import redirect
+
+        query_string = request.POST.get("query_string", "")
+        grouping_id = request.POST.get("grouping")
+        try:
+            grouping = RegionList.objects.get(pk=grouping_id)
+        except (RegionList.DoesNotExist, ValueError, TypeError):
+            messages.error(request, f"Region group #{grouping_id} not found.")
+            return redirect(reverse("regions:list") + (f"?{query_string}" if query_string else ""))
+
+        region_ids = request.POST.getlist("selected-region")
+        if "add" in request.POST:
+            add_selected_to_grouping(region_ids, grouping, request)
+        elif "move" in request.POST:
+            move_selected_to_grouping(region_ids, grouping, request)
+        elif "remove" in request.POST:
+            remove_selected_from_grouping(region_ids, grouping, request)
+        else:
+            messages.error(request, "Unknown grouping action.")
+
+        return redirect(reverse("regions:list") + (f"?{query_string}" if query_string else ""))

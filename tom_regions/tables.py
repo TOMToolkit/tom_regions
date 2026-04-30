@@ -40,9 +40,11 @@ this is intentionally close to a reskin of it.
 from __future__ import annotations
 
 import django_tables2 as tables
+from django.urls import reverse
+from django.utils.html import format_html
 
 from tom_common.htmx_table import HTMXTable
-from tom_regions.models import Region
+from tom_regions.models import Region, RegionList
 
 
 class RegionTable(HTMXTable):
@@ -102,3 +104,49 @@ class RegionTable(HTMXTable):
     # base; this partial renders only ``<tbody>`` plus pagination so a
     # filter change can update the table in place.
     partial_template_name = "tom_regions/partials/region_table_partial.html"
+
+
+class RegionGroupTable(HTMXTable):
+    """List-view table for :class:`tom_regions.models.RegionList`.
+
+    Mirrors :class:`tom_targets.tables.TargetGroupTable` -- a table of
+    region groupings with a name link (filters the regions list page
+    by that group), a count of member regions, and a Delete column.
+    No selection checkbox here: the row-level actions (filter / delete)
+    are inline.
+    """
+
+    # ``linkify`` defaults the name to RegionList.get_absolute_url, but
+    # we don't want to navigate to a detail view for the group -- we
+    # want to filter the regions list page by it. Render an explicit
+    # link to /regions/?regionlist__name=<id>.
+    name = tables.Column(orderable=True, empty_values=())
+
+    total_regions = tables.Column("Total Regions", orderable=False, empty_values=())
+    id = tables.Column("Delete", orderable=False)
+
+    def render_name(self, record):
+        return format_html(
+            '<a href="{}?regionlist__name={}">{}</a>',
+            reverse("regions:list"),
+            record.id,
+            record.name,
+        )
+
+    def render_total_regions(self, record):
+        return record.regions.count()
+
+    def render_id(self, value):
+        return format_html(
+            '<a href="{}" title="Delete Group" class="btn btn-danger">Delete</a>',
+            reverse("regions:delete-group", kwargs={"pk": value}),
+        )
+
+    class Meta(HTMXTable.Meta):
+        model = RegionList
+        fields = ["name", "total_regions", "created"]
+        # ``selection`` would be misleading on this table -- there's no
+        # bulk action on groups. Drop it explicitly.
+        sequence = ("name", "total_regions", "created", "id")
+
+    partial_template_name = "tom_regions/partials/region_group_table_partial.html"
