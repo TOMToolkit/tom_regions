@@ -23,6 +23,7 @@ from django.urls import path
 
 from tom_regions.views import (
     RegionCreateView,
+    RegionDeleteView,
     RegionDetailView,
     RegionListView,
     RegionMOCJsonView,
@@ -43,5 +44,6 @@ urlpatterns = [
         name="save-aladin-moc",
     ),
     path("<int:pk>/", RegionDetailView.as_view(), name="detail"),
+    path("<int:pk>/delete/", RegionDeleteView.as_view(), name="delete"),
     path("<int:pk>/moc.json", RegionMOCJsonView.as_view(), name="moc-json"),
 ]

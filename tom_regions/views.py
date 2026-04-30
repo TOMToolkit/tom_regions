@@ -27,8 +27,8 @@ from __future__ import annotations
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.views.generic import CreateView, DetailView, View
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, View
 from django_filters.views import FilterView
 
 from tom_common.htmx_table import HTMXTableViewMixin
@@ -104,6 +104,20 @@ class RegionListView(HTMXTableViewMixin, FilterView):
             list(Region.objects.values_list("name", flat=True))
         )
         return context
+
+
+class RegionDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete a Region (and its tile rows by FK CASCADE).
+
+    Authentication is required; per-object permissions are deferred to
+    a later phase. The associated RegionTile rows are removed by the
+    on_delete=CASCADE on the FK, so we don't need an explicit cleanup
+    pass. After delete the user lands back on the list page.
+    """
+
+    model = Region
+    success_url = reverse_lazy("regions:list")
+    template_name = "tom_regions/region_confirm_delete.html"
 
 
 class RegionDetailView(DetailView):

@@ -1,0 +1,25 @@
+{% extends 'tom_common/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Delete {{ region.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h2>Delete region "{{ region.name }}"?</h2>
+    <p class="text-muted">
+      This will remove the region and all of its
+      {{ region.n_tiles }} HEALPix tile{{ region.n_tiles|pluralize }}.
+      This action cannot be undone.
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="btn-group" role="group">
+        <a href="{% url 'regions:detail' pk=region.pk %}" class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Delete region</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

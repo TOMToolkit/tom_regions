@@ -5,27 +5,27 @@
 
 {% block content %}
 {% comment %}
-Single-region landing page. Two columns:
+Single-region landing page. Layout mirrors tom_targets/target_detail.html:
 
-  - Left (col-md-8): the Aladin viewer with this region's MOC. The
-    aladin_region_skymap template tag is the same one the list page
-    uses; we just hand it a one-element iterable so the resulting
-    overlay set has exactly this region in it. The OOB-update path is
-    unused on this page since there is no filter form to drive it.
+  - Left (col-md-4): the metadata card and the action buttons (Delete
+    today; Update will land alongside its view in a later phase).
+  - Right (col-md-8): the Aladin viewer with this region's MOC.
 
-  - Right (col-md-4): the region's metadata card. area_sr and n_tiles
-    come from the cached summary populated by recompute_region_summary;
-    max_depth is the deepest HEALPix order present in the tile set.
-
-Phase 3 adds Edit / Delete buttons here once the form views land.
+The Aladin overlay reuses the list-page partial -- we hand it a
+one-element iterable as ``region_singleton`` so the same
+aladin_region_skymap tag works for both the many-regions list view
+and this single-region detail view. The OOB-update path is unused
+here since there's no filter form on the page.
 {% endcomment %}
 <div class="row">
-  <div class="col-md-8">
-    <h2>{{ region.name }}</h2>
-    {% aladin_region_skymap region_singleton %}
-  </div>
-
   <div class="col-md-4">
+    <h2>{{ region.name }}</h2>
+
+    <div class="btn-group mb-3" role="group" aria-label="Region detail buttons">
+      <a href="{% url 'regions:delete' pk=region.id %}"
+         title="Delete region" class="btn btn-warning">Delete</a>
+    </div>
+
     <div class="card">
       <div class="card-header">Region details</div>
       <div class="card-body">
@@ -69,6 +69,10 @@ Phase 3 adds Edit / Delete buttons here once the form views land.
         </a>
       </div>
     </div>
+  </div>
+
+  <div class="col-md-8">
+    {% aladin_region_skymap region_singleton %}
   </div>
 </div>
 {% endblock content %}
