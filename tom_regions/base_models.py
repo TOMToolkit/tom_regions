@@ -28,16 +28,21 @@ from django.db import models
 from django.urls import reverse
 
 
-REGION_TYPE_POLYGON = "POLYGON"
-REGION_TYPE_CIRCLE = "CIRCLE"
-REGION_TYPE_FITS_MOC = "FITS_MOC"
-REGION_TYPE_SKYMAP = "SKYMAP"
+# Region.type is metadata about provenance only -- the underlying
+# geometry lives in RegionTile rows regardless of how it got there.
+# We deliberately keep the type set short: distinguishing every shape
+# the user could have drawn in Aladin (cone vs rect vs polygon) is
+# information the database doesn't need. The semantic distinction
+# that *does* matter -- whether a tile carries a probability density
+# (LIGO skymap-style) -- lives on RegionTile.probdensity, not here.
+REGION_TYPE_ALADIN = "ALADIN"          # drawn in Aladin Lite
+REGION_TYPE_FITS_MOC = "FITS_MOC"      # uploaded as a MOC FITS file
+REGION_TYPE_OTHER = "OTHER"            # any other source (LIGO skymap, programmatic, ...)
 
 REGION_TYPE_CHOICES = (
-    (REGION_TYPE_POLYGON, "Polygon"),
-    (REGION_TYPE_CIRCLE, "Circle"),
+    (REGION_TYPE_ALADIN, "Aladin"),
     (REGION_TYPE_FITS_MOC, "MOC FITS"),
-    (REGION_TYPE_SKYMAP, "Skymap"),
+    (REGION_TYPE_OTHER, "Other"),
 )
 
 
@@ -65,7 +70,7 @@ class BaseRegion(models.Model):
     type = models.CharField(
         max_length=20,
         choices=REGION_TYPE_CHOICES,
-        default=REGION_TYPE_POLYGON,
+        default=REGION_TYPE_OTHER,
         help_text="How this region was constructed; informational, not enforced.",
     )
     description = models.TextField(blank=True, default="")
