@@ -24,24 +24,13 @@ relevant to the page's purpose).
   <div class="col-md-12">
 
     {% comment %}
-    Heading row with Create Region dropdown (one item per Phase 3
-    create mode). Each link routes to /regions/create/?type=<mode>;
-    the view picks the right form class and the template renders
-    the right input set.
+    Heading row. Region creation entry points used to live here, but
+    they're grouped with the Save-MOC card below the Aladin viewer
+    now (both are "make a new region" actions).
     {% endcomment %}
     <div class="row">
       <div class="col-md-12">
-        <span class="float-right">
-          {{ region_count }} Region{{ region_count|pluralize }} &nbsp;
-          {% comment %}
-          Hand-drawn regions go through the in-page Save-MOC form below
-          the Aladin viewer; this button covers only the remaining
-          "import a pre-built MOC" path.
-          {% endcomment %}
-          <a class="btn btn-primary" href="{% url 'regions:create' %}?type=upload">
-            Upload MOC FITS
-          </a>
-        </span>
+        <span class="float-right">{{ region_count }} Region{{ region_count|pluralize }}</span>
         <h2>Regions</h2>
       </div>
     </div>

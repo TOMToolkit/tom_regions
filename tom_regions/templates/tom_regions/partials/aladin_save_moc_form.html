@@ -33,20 +33,36 @@ catches the race condition.
 <div id="save-moc-panel" class="card my-3"
      data-existing-region-names='{{ existing_region_names_json|default:"[]"|safe }}'>
   {% comment %}
-  Collapsible card: the body is hidden until the user clicks the
-  header. Bootstrap 4's data-toggle="collapse" handles the toggle
-  itself. The aria-expanded state plus a tiny CSS hook (the
-  ``.save-moc-toggle.collapsed`` selector) flips the chevron between
-  pointing-right (folded) and pointing-down (open).
+  Collapsible card. The header is a flex row with two children: a
+  click target on the left (the chevron + title) that toggles the
+  card body's visibility, and an Upload-MOC-FITS button on the right
+  that navigates to the file-upload create page. Both children are
+  region-creation actions, so they're grouped here visually.
+
+  Why the toggle is a sub-element rather than the whole header:
+  if the entire header had data-toggle="collapse", clicking the
+  Upload button would also fire the collapse toggle. Putting the
+  toggle on its own anchor isolates the click-target from the
+  Upload link.
+
+  The chevron rotation CSS hook (.save-moc-toggle.collapsed) flips
+  between pointing-right (folded) and pointing-down (open) based
+  on Bootstrap's automatic .collapsed class management.
   {% endcomment %}
-  <div class="card-header save-moc-toggle collapsed"
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <a class="save-moc-toggle collapsed text-decoration-none text-body"
        data-toggle="collapse"
-       data-target="#save-moc-body"
+       href="#save-moc-body"
+       role="button"
        aria-expanded="false"
        aria-controls="save-moc-body"
        style="cursor: pointer;">
-    <span class="save-moc-chevron">&rsaquo;</span>
-    Save a MOC drawn in Aladin
+      <span class="save-moc-chevron">&rsaquo;</span>
+      Save a MOC drawn in Aladin
+    </a>
+    <a href="{% url 'regions:create' %}?type=upload" class="btn btn-sm btn-primary">
+      Upload MOC FITS
+    </a>
   </div>
   <div id="save-moc-body" class="collapse">
   <div class="card-body">
