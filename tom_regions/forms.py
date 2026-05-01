@@ -203,8 +203,17 @@ class RegionMOCUploadForm(_BaseRegionCreateForm):
     )
 
     def build_moc(self):
+        from io import BytesIO
+
         from mocpy import MOC
 
-        # ``MOC.from_fits`` accepts a path or a file-like object; the
-        # uploaded file is the latter.
-        return MOC.from_fits(self.cleaned_data["moc_file"])
+        # mocpy's MOC.from_fits accepts three input shapes -- a string
+        # path, a string URL, or a BytesIO. Django's UploadedFile (the
+        # uploaded form value) is none of those: passing it directly
+        # makes mocpy try ``Path(uploaded_file).is_file()`` and TypeError
+        # because UploadedFile isn't path-like. Reading the upload's
+        # bytes into a BytesIO bypasses the path-vs-URL detection
+        # entirely; mocpy short-circuits on BytesIO at the top of
+        # from_fits and parses without filesystem access.
+        uploaded = self.cleaned_data["moc_file"]
+        return MOC.from_fits(BytesIO(uploaded.read()))
