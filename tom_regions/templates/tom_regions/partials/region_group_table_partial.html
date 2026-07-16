@@ -1,0 +1,23 @@
+{% comment %}
+tom_regions/partials/region_group_table_partial.html
+
+Table-body partial for the RegionGroupTable -- HTMX swaps this in
+when the user changes the search filter on the grouping list page.
+The wrapping region_grouping.html owns the heading, the Create
+button, and the filter form; this file just renders the table and
+the empty-state hint.
+{% endcomment %}
+{% load render_table from django_tables2 %}
+
+{% render_table table %}
+
+{% if not table.data %}
+    <div class="alert alert-info mt-3">
+        {% if empty_database %}
+            There are no region groupings yet.
+            <a href="{% url 'regions:create-group' %}">Create one</a> to organize related regions together.
+        {% else %}
+            No groupings match that search.
+        {% endif %}
+    </div>
+{% endif %}

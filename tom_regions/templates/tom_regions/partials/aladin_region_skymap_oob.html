@@ -1,0 +1,35 @@
+{% comment %}
+tom_regions/partials/aladin_region_skymap_oob.html
+
+Out-of-band (OOB) script block re-running the Aladin overlay loader
+against a new region set. Two callers:
+
+- The list view's filter HTMX response. ``remove_name`` is empty in
+  that path; the script just refreshes the overlay set.
+- RegionSaveFromAladinView's success response. ``remove_name`` is the
+  pre-save Aladin overlay name (e.g. "cone"); the script removes that
+  overlay before applying the new region set, so the saved version
+  re-appears under the user's chosen name without leaving a duplicate
+  behind.
+
+The hx-swap-oob="true" attribute is what makes this work: HTMX sees
+the matching id ("aladin-regions-data") in the response, replaces
+that element in the existing DOM, and runs any inline <script> it
+contains. The viewer itself is never rebuilt -- only the region
+overlay set changes.
+{% endcomment %}
+<div id="aladin-regions-data" hx-swap-oob="true">
+    <script>
+        (function () {
+            var nameToRemove = "{{ remove_name|default:""|escapejs }}";
+            if (nameToRemove
+                && window.tomRegions
+                && typeof window.tomRegions.removeOverlayByName === 'function') {
+                window.tomRegions.removeOverlayByName(nameToRemove);
+            }
+            if (window.updateAladinRegions) {
+                updateAladinRegions({{ regions_json|safe }});
+            }
+        })();
+    </script>
+</div>

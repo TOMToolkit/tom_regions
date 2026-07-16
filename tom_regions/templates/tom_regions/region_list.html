@@ -1,0 +1,146 @@
+{% extends 'tom_common/base.html' %}
+{% load bootstrap4 regions_extras crispy_forms_tags %}
+
+{% block title %}Regions{% endblock %}
+
+{% block content %}
+{% comment %}
+The region list page lays out four stacked sections, top to bottom:
+
+  1. Heading + region count + (later) "Create Region" dropdown.
+  2. Aladin Lite v3 skymap with one MOC overlay per region in the
+     current page. Wired up in aladin_region_skymap.html.
+  3. Filter form -- the id="filter-form" is what HTMXTable's
+     hx-include references on every sort/page request, so the
+     active filters survive table refreshes.
+  4. The HTMX-swappable table itself, in div.table-container.
+
+Mirrors the layout of tom_targets/target_list.html, minus the
+bulk-grouping form and the Moon/Sun overlays (regions are abstract
+sky areas, not observation candidates, so "what's up tonight" isn't
+relevant to the page's purpose).
+{% endcomment %}
+<div class="row">
+  <div class="col-md-12">
+
+    {% comment %}
+    Heading row. Region creation entry points used to live here, but
+    they're grouped with the Save-MOC card below the Aladin viewer
+    now (both are "make a new region" actions).
+    {% endcomment %}
+    <div class="row">
+      <div class="col-md-12">
+        <span class="float-right">{{ region_count }} Region{{ region_count|pluralize }}</span>
+        <h2>Regions</h2>
+      </div>
+    </div>
+
+    {# Aladin viewer + initial MOC overlay set; OOB updates flow through region_table_partial.html. #}
+    {% aladin_region_skymap skymap_objects %}
+
+    {% comment %}
+    Save-MOC form section: harvests user-drawn MOCs from Aladin's
+    "Overlays > MOC > From Selection" menu and persists them as
+    Regions in place. See aladin_save_moc_form.html for details.
+    {% endcomment %}
+    {% include "tom_regions/partials/aladin_save_moc_form.html" %}
+
+    {% comment %}
+    Grouping form: Add / Move / Remove the rows whose checkboxes are
+    ticked into the selected RegionList. The hidden ``query_string``
+    round-trips the active filter form so the redirect lands the user
+    back on the same filtered view. Hidden when no groupings exist or
+    the user is anonymous.
+    {% endcomment %}
+    {% if groupings %}
+    <form id="grouping-form" action="{% url 'regions:add-remove-grouping' %}" method="POST" class="my-3">
+      {% csrf_token %}
+      <div class="form-group d-flex flex-row align-items-baseline">
+        <label class="mr-2">Add / Move / Remove from grouping</label>
+        <select name="grouping" class="form-control w-25 mr-2">
+          {% for grouping in groupings %}
+          <option value="{{ grouping.id }}">{{ grouping.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="hidden" value="{{ query_string }}" name="query_string">
+        <input type="hidden" value="False" id="isSelectAll" name="isSelectAll">
+        {% comment %}
+        Disabled by default; the JS below enables them as soon as at
+        least one row checkbox is ticked, and disables again after the
+        table is re-rendered by an HTMX filter swap.
+        {% endcomment %}
+        <button type="submit" name="add" class="btn btn-outline-primary mr-1 grouping-action-btn" disabled>Add</button>
+        <button type="submit" name="move" class="btn btn-outline-primary mr-1 grouping-action-btn" disabled>Move</button>
+        <button type="submit" name="remove" class="btn btn-outline-danger grouping-action-btn" disabled>Remove</button>
+      </div>
+    </form>
+
+    <script>
+    (function () {
+      // Enable the Add / Move / Remove buttons only when at least one
+      // row in the table is selected. The buttons start disabled (set
+      // server-side) and we toggle them based on the live checkbox
+      // state. The selected-region checkboxes live in the table inside
+      // div.table-container, which HTMX swaps wholesale on filter
+      // changes -- so we use event delegation on document.body to keep
+      // working across swaps.
+      function updateGroupingButtons() {
+        var n = document.querySelectorAll('input[name="selected-region"]:checked').length;
+        document.querySelectorAll('.grouping-action-btn').forEach(function (btn) {
+          btn.disabled = (n === 0);
+        });
+      }
+      document.body.addEventListener('change', function (e) {
+        if (!e.target) return;
+        // Either a row checkbox or the header-checkbox toggling all rows.
+        if (e.target.name === 'selected-region'
+            || e.target.classList.contains('header-checkbox')) {
+          updateGroupingButtons();
+        }
+      });
+      // After any HTMX swap (table refresh on filter change) the
+      // checkbox state resets; re-evaluate to put buttons back to disabled.
+      document.body.addEventListener('htmx:afterSwap', updateGroupingButtons);
+      updateGroupingButtons();
+    })();
+    </script>
+    {% endif %}
+
+    <hr>
+
+    {# Filter form rendered by crispy-forms; HTMX attrs on individual widgets drive the refresh. #}
+    <form id="filter-form" class="mb-3"
+          hx-get="{% url 'regions:list' %}"
+          hx-target="div.table-container"
+          hx-swap="outerHTML"
+          hx-indicator=".progress">
+      {% crispy filter.form %}
+    </form>
+
+    {# Indeterminate progress bar; HTMX targets it via hx-indicator=".progress". #}
+    <div class="progress">
+      <div class="indeterminate"></div>
+    </div>
+
+    {# Table; HTMX swaps this entire container on filter / sort / page changes. #}
+    <div class="table-container">
+      {% include "tom_regions/partials/region_table_partial.html" %}
+    </div>
+  </div>
+</div>
+
+{% comment %}
+Header-checkbox helper script: clicking the header checkbox flips
+every per-row checkbox. Mirrors the equivalent script in
+target_list.html. We keep it here so it runs on the full page; the
+table partial is rendered server-side without any JS.
+{% endcomment %}
+<script>
+  document.body.addEventListener('change', function(e) {
+    if (e.target && e.target.classList.contains('header-checkbox')) {
+      const checkboxes = document.querySelectorAll('input[name="selected-region"]');
+      checkboxes.forEach(cb => cb.checked = e.target.checked);
+    }
+  });
+</script>
+{% endblock content %}
