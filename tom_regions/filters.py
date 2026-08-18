@@ -221,10 +221,8 @@ class RegionFilterSet(HTMXTableFilterSet):
         except ImportError:
             logger.warning("contains_target filter unusable: tom_targets not installed")
             return queryset.none()
-        # ``Target.matches.match_target`` performs a name+alias lookup and
-        # returns a queryset; we resolve to a single hit before computing
-        # the pixel.
-        target_qs = Target.matches.match_target(value)
+
+        target_qs = Target.matches.match_name(value)  # TargetMatchManager
         targets = list(target_qs[:2])  # cap the slice; one row is enough
         if len(targets) != 1:
             return queryset.none()
