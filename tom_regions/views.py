@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, View
 from django_filters.views import FilterView
@@ -165,6 +165,31 @@ class RegionDetailView(DetailView):
             else RegionList.objects.none()
         )
         return context
+
+
+class RegionTargetsView(View):
+    """HTMX partial: the targets that fall within a region.
+
+    Loaded into the RegionDetail page's "Targets in this region" card via an
+    ``hx-get`` on page load, so the (indexed, but not free) membership query
+    doesn't block the detail page's initial render. Returns the table fragment,
+    not a full page.
+    """
+
+    def get(self, request, pk: int):
+        from tom_regions.services.queries import targets_in_region
+
+        region = get_object_or_404(Region, pk=pk)
+        # Evaluate once: the table and the Aladin marker payload use the same rows.
+        targets = list(targets_in_region(region))
+        targets_json = [
+            {"name": t.name, "ra": t.ra, "dec": t.dec, "url": t.get_absolute_url()} for t in targets
+        ]
+        return render(
+            request,
+            "tom_regions/partials/region_targets_partial.html",
+            {"region": region, "targets": targets, "targets_json": targets_json},
+        )
 
 
 class RegionMOCJsonView(View):

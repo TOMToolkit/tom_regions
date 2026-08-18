@@ -59,6 +59,15 @@ Three things to understand here.
 <div id="aladin-regions-data"></div>
 
 <script type="text/javascript">
+// Target markers for "targets in this region" (RegionDetail page). The
+// HTMX-loaded targets partial calls this with [{name, ra, dec, url}, ...].
+// That load can finish before Aladin has booted, so until the init below
+// installs the real implementation, the latest call is parked here and
+// replayed once the viewer exists.
+window.updateAladinRegionTargets = function (targets) {
+    window.updateAladinRegionTargets.pending = targets;
+};
+
 (async function loadAladinForRegions() {
     // Aladin Lite v3 boot. We cache the script in sessionStorage on first
     // load so subsequent navigations within the session don't re-fetch
@@ -132,6 +141,27 @@ Three things to understand here.
             regions.forEach(addRegionMOC);
         };
 
+        // Target markers: one A.marker per target inside the displayed
+        // region, in a catalog created on first use (so the list page,
+        // which has no targets card, doesn't get an empty catalog in its
+        // Stack). Same marker/popup style as tom_targets' skymap.
+        var targetCatalog = null;
+        function setRegionTargetMarkers(targets) {
+            if (!targetCatalog) {
+                targetCatalog = A.catalog({ name: 'Targets in region', color: '#4da3ff', sourceSize: 14 });
+                aladin.addCatalog(targetCatalog);
+            }
+            targetCatalog.removeAll();
+            targetCatalog.addSources((targets || []).map(function (t) {
+                var desc = 'RA: ' + Number(t.ra).toFixed(5) + '<br>Dec: ' + Number(t.dec).toFixed(5);
+                if (t.url) desc += '<br><a href="' + _escapeHtml(t.url) + '">Target page &rsaquo;</a>';
+                return A.marker(t.ra, t.dec, { popupTitle: _escapeHtml(t.name), popupDesc: desc });
+            }));
+        }
+        var pendingTargets = window.updateAladinRegionTargets.pending;
+        window.updateAladinRegionTargets = setRegionTargetMarkers;
+        if (pendingTargets) setRegionTargetMarkers(pendingTargets);
+
         // Helpers exposed for the Save-MOC form section in
         // aladin_save_moc_form.html.
         window.tomRegions = {
@@ -149,6 +179,7 @@ Three things to understand here.
                 var all = aladin.getOverlays() || [];
                 return all.filter(function (o) {
                     if (!o || typeof o.serialize !== 'function') return false;
+                    if (typeof o.addSources === 'function') return false;  // a catalog (e.g. target markers), not a MOC
                     var n = o.name || '';
                     return !regionOverlayNames.has(n);
                 });

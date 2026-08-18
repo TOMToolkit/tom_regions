@@ -82,4 +82,23 @@ here since there's no filter form on the page.
     {% aladin_region_skymap region_singleton %}
   </div>
 </div>
+
+<div class="row mt-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">Targets in this region</div>
+      {% comment %}
+      Loaded via HTMX on page load so the membership query (indexed, but still a
+      query) doesn't block the detail page's first paint. The endpoint returns
+      just the table fragment, which replaces this card body.
+      {% endcomment %}
+      <div class="card-body"
+           hx-get="{% url 'tom_regions:targets' pk=region.pk %}"
+           hx-trigger="load"
+           hx-swap="innerHTML">
+        <div class="text-muted small">Loading targets…</div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}

@@ -32,6 +32,7 @@ from tom_regions.views import (
     RegionListView,
     RegionMOCJsonView,
     RegionSaveFromAladinView,
+    RegionTargetsView,
 )
 
 app_name = "tom_regions"
@@ -70,6 +71,7 @@ urlpatterns = [
         name="add-remove-grouping",
     ),
     path("<int:pk>/", RegionDetailView.as_view(), name="detail"),
+    path("<int:pk>/targets/", RegionTargetsView.as_view(), name="targets"),
     path("<int:pk>/delete/", RegionDeleteView.as_view(), name="delete"),
     path("<int:pk>/moc.json", RegionMOCJsonView.as_view(), name="moc-json"),
 ]

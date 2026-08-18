@@ -1,0 +1,39 @@
+{% comment %}
+The targets that fall within a region, rendered into the RegionDetail page's
+"Targets in this region" card by an HTMX load. `targets` is the list from the
+indexed targets_in_region(region) query; `targets_json` is the same targets as
+[{name, ra, dec, url}] for the Aladin markers; `region` is the region.
+
+The script below runs when HTMX swaps this fragment in (htmx evaluates
+<script> tags in swapped content) and hands the targets to the skymap
+partial's window.updateAladinRegionTargets, which plots them as markers on
+the same Aladin view that shows the region's footprint.
+{% endcomment %}
+{{ targets_json|json_script:"region-targets-json" }}
+<script>
+(function () {
+    var data = JSON.parse(document.getElementById('region-targets-json').textContent);
+    if (typeof window.updateAladinRegionTargets === 'function') window.updateAladinRegionTargets(data);
+})();
+</script>
+{% if targets %}
+  <p class="text-muted small mb-2">
+    {{ targets|length }} target{{ targets|length|pluralize }} fall{{ targets|length|pluralize:"s," }} within this region.
+  </p>
+  <table class="table table-sm mb-0">
+    <thead>
+      <tr><th>Name</th><th>RA</th><th>Dec</th></tr>
+    </thead>
+    <tbody>
+      {% for target in targets %}
+        <tr>
+          <td><a href="{{ target.get_absolute_url }}">{{ target.name }}</a></td>
+          <td>{{ target.ra|floatformat:5 }}</td>
+          <td>{{ target.dec|floatformat:5 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="text-muted mb-0">No targets fall within this region.</p>
+{% endif %}
