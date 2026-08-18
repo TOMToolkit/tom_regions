@@ -72,16 +72,22 @@ class TomRegionsConfig(AppConfig):
     # ------------------------------------------------------------------
 
     def target_detail_buttons(self):
-        # The plan calls for a "Find regions containing this target"
-        # button that routes to ``regions:list?cone_search=<ra>,<dec>,5deg``.
-        # That requires either query-string-aware button rendering in
-        # tom_common (currently the button helper just runs ``{% url %}``
-        # against the namespace) or a dedicated detail view that takes
-        # the target id and computes the cone server-side. Both options
-        # are bigger than Phase 2 wants to chew. Returning None disables
-        # the button cleanly until we can do this properly in Phase 4
-        # alongside the targets-in-region API view.
+        # No button. The "Regions" tab (target_detail_tabs) answers "which
+        # regions contain this target?" in place; a button that navigated to
+        # the regions list filtered by ``contains_target`` was redundant with it.
         return None
+
+    def target_detail_tabs(self):
+        # A "Regions" tab listing the regions whose footprint covers this target
+        # (the reverse of "targets in a region"). Uses tom_base's existing
+        # target_detail_tabs integration point, so no tom_base change is needed.
+        return [
+            {
+                "partial": f"{self.name}/partials/target_regions_tab.html",
+                "context": f"{self.name}.integration.target_regions_tab_context",
+                "label": "Regions",
+            }
+        ]
 
     def nav_items(self):
         # The "Regions" link is contributed via this partial; tom_common's

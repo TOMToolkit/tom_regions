@@ -1,0 +1,21 @@
+{% comment %}
+"Regions" tab on the target detail page (tom_base target_detail_tabs integration
+point). `regions` is regions_containing_target(target); `target` is the target.
+{% endcomment %}
+{% if regions %}
+  <p class="text-muted small">
+    This target falls within {{ regions|length }} region{{ regions|length|pluralize }}.
+  </p>
+  <ul class="list-unstyled mb-0">
+    {% for region in regions %}
+      <li>
+        <a href="{% url 'regions:detail' pk=region.id %}">{{ region.name }}</a>
+        {% if region.area_sq_deg %}
+          <span class="text-muted small">({{ region.area_sq_deg|floatformat:"-2" }} deg²)</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-muted mb-0">This target does not fall within any defined region.</p>
+{% endif %}
