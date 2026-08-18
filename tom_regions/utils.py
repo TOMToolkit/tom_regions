@@ -20,9 +20,49 @@ from tom_regions.healpix_django.encoding import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
     from mocpy import MOC
-
     from tom_regions.models import Region
+
+
+def materialize_tiles(
+    region: "Region",
+    tiles: "Iterable[tuple[int, int, float | None]]",
+    *,
+    batch_size: int = 1000,
+) -> int:
+    """Insert ``RegionTile`` rows from ``(lower, upper, probdensity)`` triples.
+
+    This is the single low-level path that turns deepest-level ``int8range``
+    intervals into persisted rows and refreshes the region's cached summary.
+    Two callers share it, differing only in where the per-tile probability
+    density comes from:
+
+    - :func:`bulk_create_tiles` -- ordinary geometry from a MOC, where every
+      tile gets the *same* (usually ``None``) density.
+    - :func:`tom_regions.services.skymap.ingest_skymap` -- a probability skymap,
+      where each tile carries its *own* density.
+
+    Args:
+        region: The (already-saved) Region to attach tiles to.
+        tiles: Iterable of ``(lower, upper, probdensity)``. ``lower``/``upper``
+            are deepest-level NESTED indices forming a half-open
+            ``[lower, upper)`` interval; ``probdensity`` is inverse steradians or
+            ``None``.
+        batch_size: Per-batch row count for ``bulk_create``.
+
+    Returns:
+        Number of tiles inserted.
+    """
+    from tom_regions.models import RegionTile
+
+    rows = [
+        RegionTile(region=region, hpx=NumericRange(lower, upper, "[)"), probdensity=probdensity)
+        for lower, upper, probdensity in tiles
+    ]
+    RegionTile.objects.bulk_create(rows, batch_size=batch_size)
+    recompute_region_summary(region)
+    return len(rows)
 
 
 def bulk_create_tiles(
@@ -44,27 +84,22 @@ def bulk_create_tiles(
         region: The Region row to attach tiles to.
         moc: A :class:`mocpy.MOC`.
         probdensity: Optional probability density in inverse steradians,
-            applied to every inserted tile. Pass for SKYMAP-type regions;
-            leave ``None`` for ordinary geometry.
+            applied to *every* inserted tile. For a real probability skymap
+            (a different density per tile) use
+            :func:`tom_regions.services.skymap.ingest_skymap` instead.
         batch_size: Per-batch row count for ``bulk_create``. The default
             is conservative; LIGO-scale ingestions can usually go higher.
 
     Returns:
         Number of tiles inserted.
     """
-    from tom_regions.models import RegionTile
-
-    tiles = [
-        RegionTile(
-            region=region,
-            hpx=NumericRange(lower, upper, "[)"),
-            probdensity=probdensity,
-        )
-        for lower, upper in moc_to_ranges(moc)
-    ]
-    RegionTile.objects.bulk_create(tiles, batch_size=batch_size)
-    recompute_region_summary(region)
-    return len(tiles)
+    # One scalar density for the whole MOC: broadcast it across the tiles and
+    # hand the triples to the shared materializer.
+    return materialize_tiles(
+        region,
+        ((lower, upper, probdensity) for lower, upper in moc_to_ranges(moc)),
+        batch_size=batch_size,
+    )
 
 
 def recompute_region_summary(region: "Region") -> None:
