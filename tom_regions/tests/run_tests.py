@@ -19,8 +19,8 @@ register test modules anywhere.
 The ``--exclude-tag=canary`` flag mirrors the convention TOMToolkit
 uses elsewhere: tests decorated with ``@tag('canary')`` exercise live
 external services and are run via a separate runner
-(:mod:`tom_regions.tests.run_canary_tests`, when we add it). The
-default suite stays hermetic.
+(:mod:`tom_regions.tests.run_canary_tests`). The default suite stays
+hermetic.
 """
 
 from __future__ import annotations

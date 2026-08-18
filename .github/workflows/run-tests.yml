@@ -1,22 +1,16 @@
-# tom_regions test matrix
+# Job layout follows TOMToolkit/tom_app_template (lint, check_migrations,
+# run_tests, publish_coverage), with two deliberate divergences:
 #
-# Two jobs:
-#   - lint:   flake8 against the tom_regions package
-#   - test:   the standalone test runner against a postgres:16-alpine
-#             service container, across the supported Python versions.
-#
-# The ``services.postgres`` block stands up a real PostgreSQL 14+
-# instance per matrix cell -- tom_regions hard-requires postgres for
-# int8range, range_agg, and SP-GiST, so a sqlite shortcut isn't an
-# option. The credentials below match boot_django.py's defaults.
+#   - Every job that boots Django gets a ``services.postgres`` container:
+#     tom_regions hard-requires PostgreSQL 14+ (int8range, range_agg,
+#     SP-GiST), and ``apps.ready()`` opens a connection, so even
+#     ``makemigrations --check`` needs a live server. Credentials match
+#     boot_django.py's defaults.
+#   - No macOS matrix: GitHub service containers are Linux-only.
 
 name: run-tests
 
-on:
-  push:
-    branches: [dev, main]
-  pull_request:
-    branches: [dev, main]
+on: [push, pull_request]
 
 jobs:
   lint:
@@ -26,19 +20,55 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install Poetry
-        run: pip install --upgrade pip poetry
-      - name: Install deps
-        run: poetry install --with dev
-      - name: Run flake8
-        run: poetry run flake8 tom_regions --exclude='*/migrations/*' --max-line-length=120
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "poetry>=2.0,<3.0"
+          poetry install --with lint
+      - name: Style Checks
+        run: poetry run flake8 tom_* --exclude=*/migrations/* --max-line-length=120
 
-  test:
+  check_migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tom_regions_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "poetry>=2.0,<3.0"
+          poetry install
+      - name: Missing Migrations
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: '5432'
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tom_regions_test
+        run: poetry run python tom_regions/tests/check_migrations.py
+
+  run_tests:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13']
     services:
       postgres:
         image: postgres:16-alpine
@@ -60,11 +90,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Poetry
-        run: pip install --upgrade pip poetry
-      - name: Install deps
-        run: poetry install --with dev
-      - name: Run tests
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "poetry>=2.0,<3.0"
+          poetry env info  # display poetry's env info for debugging
+          poetry install --with test
+      - name: Run Tests
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: '5432'
@@ -72,3 +104,43 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: tom_regions_test
         run: poetry run python tom_regions/tests/run_tests.py
+
+  publish_coverage:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tom_regions_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install "poetry>=2.0,<3.0"
+          poetry install --with test,coverage
+      - name: Run Tests
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: '5432'
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tom_regions_test
+        # source/omit come from [tool.coverage.run] in pyproject.toml
+        run: poetry run coverage run tom_regions/tests/run_tests.py
+      - name: Report Coverage
+        run: poetry run coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
