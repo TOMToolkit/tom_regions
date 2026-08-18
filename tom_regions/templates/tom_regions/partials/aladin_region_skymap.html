@@ -141,6 +141,33 @@ window.updateAladinRegionTargets = function (targets) {
             regions.forEach(addRegionMOC);
         };
 
+        // Close the Stack box when a selection tool is chosen. Aladin's
+        // Stack > + > MOC > From selection > Circle/Rect/Polygon menu calls
+        // aladin.select(mode, cb) and enters selection mode, but leaves the
+        // Stack box open on top of the sky, so part of the canvas can't be
+        // selected. Wrap select() on this instance to fold the box first.
+        // The stack widget lives at aladin.toolbar.widgets.stack (an Aladin
+        // Lite 3.8 internal, hence the guards); the DOM fallback clicks the
+        // toggled Stack button, which is the same thing the user would do.
+        (function autoCloseStackOnSelect() {
+            if (typeof aladin.select !== 'function') return;
+            var originalSelect = aladin.select.bind(aladin);
+            aladin.select = function (mode, callback) {
+                try {
+                    var stack = aladin.toolbar && aladin.toolbar.widgets && aladin.toolbar.widgets.stack;
+                    if (stack && stack.toggled && typeof stack.toggle === 'function') {
+                        stack.toggle();
+                    } else {
+                        var btn = document.querySelector('.aladin-stack-control button.toggled');
+                        if (btn) btn.click();
+                    }
+                } catch (e) {
+                    console.warn('could not close the Aladin Stack box:', e);
+                }
+                return originalSelect(mode, callback);
+            };
+        })();
+
         // Target markers: one A.marker per target inside the displayed
         // region, in a catalog created on first use (so the list page,
         // which has no targets card, doesn't get an empty catalog in its
