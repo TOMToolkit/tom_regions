@@ -12,6 +12,9 @@ Modules
 -------
 - :mod:`tom_regions.services.queries` -- read selectors: which targets /
   observations fall inside a region.
+- :mod:`tom_regions.services.skymap` -- probability-skymap operations: ingest a
+  multi-order LIGO/Virgo skymap, derive credible-region contours, and score a
+  point's enclosed credible probability.
 
 Layering, from most framework-free to most ORM-coupled:
 
