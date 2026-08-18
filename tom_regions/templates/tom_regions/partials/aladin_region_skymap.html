@@ -35,6 +35,13 @@ Three things to understand here.
    updateAladinRegions is named "region-N (...)" -- see overlayName
    below. Overlays that don't match that prefix are user-drawn.
 {% endcomment %}
+<style>
+/* Guard against tom_base's global ``.bottom { position:absolute; bottom:20% }``
+   (tom_common/css/main.css, added in tomtoolkit 3.0). */
+.aladin-container .aladin-tooltip-container.bottom {
+    bottom: auto;
+}
+</style>
 <div id="aladin-lite-div" style="width:auto; height:600px; margin:auto; margin-top: 20px; position: relative;">
     {% comment %}
     Click-to-inspect popup. Hidden by default; the click handler in the
@@ -141,12 +148,8 @@ window.updateAladinRegionTargets = function (targets) {
 
         // Close the Stack box when a selection tool is chosen. Aladin's
         // Stack > + > MOC > From selection > Circle/Rect/Polygon menu calls
-        // aladin.select(mode, cb) and enters selection mode, but leaves the
-        // Stack box open on top of the sky, so part of the canvas can't be
-        // selected. Wrap select() on this instance to fold the box first.
-        // The stack widget lives at aladin.toolbar.widgets.stack (an Aladin
-        // Lite 3.8 internal, hence the guards); the DOM fallback clicks the
-        // toggled Stack button, which is the same thing the user would do.
+        // aladin.select(mode, cb). Wrap select() on this instance to fold the
+        // box first.
         (function autoCloseStackOnSelect() {
             if (typeof aladin.select !== 'function') return;
             var originalSelect = aladin.select.bind(aladin);
