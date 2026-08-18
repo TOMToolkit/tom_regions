@@ -7,12 +7,14 @@ The dropdown surfaces the two top-level pages: the regions list
 (/regions/) and the grouping list (/regions/grouping/). The "active"
 class lights up when any URL in the regions namespace is being
 served, mirroring the Targets and Observations dropdown behavior.
+Markup follows tom_base 3.0's navbar_content.html (Bootstrap 5:
+``data-bs-toggle``, ``<ul>``/``<li>`` menu, ``active`` on the anchor).
 {% endcomment %}
-<li class="nav-item dropdown {% if request.resolver_match.namespace == 'regions' %}active{% endif %}">
-  <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-     aria-haspopup="true" aria-expanded="false">Regions</a>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="{% url 'regions:list' %}">Regions</a>
-    <a class="dropdown-item" href="{% url 'regions:grouping' %}">Region Grouping</a>
-  </div>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle {% if request.resolver_match.namespace == 'regions' %}active{% endif %}"
+     data-bs-toggle="dropdown" role="button" aria-expanded="false">Regions</a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'regions:list' %}">Regions</a></li>
+    <li><a class="dropdown-item" href="{% url 'regions:grouping' %}">Region Grouping</a></li>
+  </ul>
 </li>

@@ -1,5 +1,5 @@
 {% extends 'tom_common/base.html' %}
-{% load bootstrap4 regions_extras crispy_forms_tags %}
+{% load django_bootstrap5 regions_extras crispy_forms_tags %}
 
 {% block title %}Regions{% endblock %}
 
@@ -30,7 +30,7 @@ relevant to the page's purpose).
     {% endcomment %}
     <div class="row">
       <div class="col-md-12">
-        <span class="float-right">{{ region_count }} Region{{ region_count|pluralize }}</span>
+        <span class="float-end">{{ region_count }} Region{{ region_count|pluralize }}</span>
         <h2>Regions</h2>
       </div>
     </div>
@@ -55,9 +55,9 @@ relevant to the page's purpose).
     {% if groupings %}
     <form id="grouping-form" action="{% url 'regions:add-remove-grouping' %}" method="POST" class="my-3">
       {% csrf_token %}
-      <div class="form-group d-flex flex-row align-items-baseline">
-        <label class="mr-2">Add / Move / Remove from grouping</label>
-        <select name="grouping" class="form-control w-25 mr-2">
+      <div class="mb-3 d-flex flex-row align-items-baseline">
+        <label class="me-2">Add / Move / Remove from grouping</label>
+        <select name="grouping" class="form-select w-25 me-2">
           {% for grouping in groupings %}
           <option value="{{ grouping.id }}">{{ grouping.name }}</option>
           {% endfor %}
@@ -69,8 +69,8 @@ relevant to the page's purpose).
         least one row checkbox is ticked, and disables again after the
         table is re-rendered by an HTMX filter swap.
         {% endcomment %}
-        <button type="submit" name="add" class="btn btn-outline-primary mr-1 grouping-action-btn" disabled>Add</button>
-        <button type="submit" name="move" class="btn btn-outline-primary mr-1 grouping-action-btn" disabled>Move</button>
+        <button type="submit" name="add" class="btn btn-outline-primary me-1 grouping-action-btn" disabled>Add</button>
+        <button type="submit" name="move" class="btn btn-outline-primary me-1 grouping-action-btn" disabled>Move</button>
         <button type="submit" name="remove" class="btn btn-outline-danger grouping-action-btn" disabled>Remove</button>
       </div>
     </form>

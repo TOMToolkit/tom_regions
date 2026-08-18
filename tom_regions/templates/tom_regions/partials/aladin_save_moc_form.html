@@ -40,7 +40,7 @@ catches the race condition.
   region-creation actions, so they're grouped here visually.
 
   Why the toggle is a sub-element rather than the whole header:
-  if the entire header had data-toggle="collapse", clicking the
+  if the entire header had data-bs-toggle="collapse", clicking the
   Upload button would also fire the collapse toggle. Putting the
   toggle on its own anchor isolates the click-target from the
   Upload link.
@@ -51,7 +51,7 @@ catches the race condition.
   {% endcomment %}
   <div class="card-header d-flex justify-content-between align-items-center">
     <a class="save-moc-toggle collapsed text-decoration-none text-body"
-       data-toggle="collapse"
+       data-bs-toggle="collapse"
        href="#save-moc-body"
        role="button"
        aria-expanded="false"
@@ -78,29 +78,27 @@ catches the race condition.
           hx-swap="outerHTML">
       {% csrf_token %}
 
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="aladin-overlay-select">Aladin overlay</label>
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <label for="aladin-overlay-select" class="form-label">Aladin overlay</label>
           <div class="input-group">
-            <select id="aladin-overlay-select" name="aladin_overlay_name" class="form-control">
+            <select id="aladin-overlay-select" name="aladin_overlay_name" class="form-select">
               <option value="">(no MOC overlay yet)</option>
             </select>
-            <div class="input-group-append">
-              <button type="button" id="aladin-overlay-refresh"
-                      class="btn btn-outline-secondary"
-                      title="Re-query Aladin's overlay panel">Refresh</button>
-            </div>
+            <button type="button" id="aladin-overlay-refresh"
+                    class="btn btn-outline-secondary"
+                    title="Re-query Aladin's overlay panel">Refresh</button>
           </div>
         </div>
 
-        <div class="form-group col-md-4">
-          <label for="save-moc-name">Name</label>
+        <div class="mb-3 col-md-4">
+          <label for="save-moc-name" class="form-label">Name</label>
           <input id="save-moc-name" name="name" type="text" class="form-control" required
                  placeholder="(set on overlay choice; rename here)">
         </div>
 
-        <div class="form-group col-md-4">
-          <label for="save-moc-description">Description</label>
+        <div class="mb-3 col-md-4">
+          <label for="save-moc-description" class="form-label">Description</label>
           <input id="save-moc-description" name="description" type="text" class="form-control">
         </div>
       </div>
@@ -115,7 +113,7 @@ catches the race condition.
       <input type="hidden" name="moc_json" id="save-moc-json">
 
       <button type="submit" class="btn btn-primary">Save Region</button>
-      <span id="save-moc-status" class="ml-2 text-muted small"></span>
+      <span id="save-moc-status" class="ms-2 text-muted small"></span>
     </form>
   </div>
   </div>{# /#save-moc-body collapse wrapper #}
@@ -123,7 +121,7 @@ catches the race condition.
 
 <style>
 /* Chevron points right when the card is folded, rotates 90deg when open.
-   Bootstrap 4 toggles the ``.collapsed`` class on the data-toggle
+   Bootstrap 5 toggles the ``.collapsed`` class on the data-bs-toggle
    element to track state. */
 .save-moc-toggle .save-moc-chevron {
   display: inline-block;

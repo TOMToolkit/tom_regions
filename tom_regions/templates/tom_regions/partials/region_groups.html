@@ -51,11 +51,11 @@ tom_targets/partials/target_groups.html. Inputs:
 {% endif %}
 
 {% if all_groupings %}
-<form action="{% url 'regions:add-remove-grouping' %}" method="POST" class="form-inline mt-2">
+<form action="{% url 'regions:add-remove-grouping' %}" method="POST" class="d-flex align-items-center mt-2">
   {% csrf_token %}
   <input type="hidden" name="selected-region" value="{{ region.id }}">
-  <label class="mr-2 small">Add to grouping:</label>
-  <select name="grouping" class="form-control form-control-sm mr-2">
+  <label class="me-2 small">Add to grouping:</label>
+  <select name="grouping" class="form-select form-select-sm w-auto me-2">
     {% for g in all_groupings %}
     <option value="{{ g.id }}">{{ g.name }}</option>
     {% endfor %}

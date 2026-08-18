@@ -21,7 +21,7 @@ What :class:`tom_common.htmx_table.HTMXTable` provides for free
   form.
 - The ``hx-include="#filter-form"`` attribute on the table element so
   every htmx-driven sort/page request preserves the active filters.
-- The ``bootstrap_htmx.html`` table template (Bootstrap 4 styling +
+- The ``bootstrap_htmx.html`` table template (Bootstrap 5 styling +
   pagination links that trigger htmx swaps).
 - A ``partial_template_name`` hook for the body partial.
 

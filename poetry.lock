@@ -7,7 +7,7 @@ description = "ALeRCE Client"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "alerce-2.3.0-py3-none-any.whl", hash = "sha256:b35bc4136d484bcee9179043aa8dfeaba22f29aba93420798f2ff1451a969cdf"},
     {file = "alerce-2.3.0.tar.gz", hash = "sha256:8dead5d06a544294f24c6b1213080adc01205c8cc584e03a654178e13cc5dc36"},
@@ -27,7 +27,7 @@ description = "Document parameters, class attributes, return types, and variable
 optional = false
 python-versions = ">=3.8"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "annotated_doc-0.0.4-py3-none-any.whl", hash = "sha256:571ac1dc6991c450b25a9c2d84a3705e2ae7a53467b5d111c24fa8baabbed320"},
     {file = "annotated_doc-0.0.4.tar.gz", hash = "sha256:fbcda96e87e9c92ad167c2e53839e57503ecfda18804ea28102353485033faa4"},
@@ -40,7 +40,7 @@ description = "Python implementation of the ASDF Standard"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asdf-3.5.0-py3-none-any.whl", hash = "sha256:44fe368061451eb25877f3bc1cd6945635f30293e49d68c678f1c6f4958e044d"},
     {file = "asdf-3.5.0.tar.gz", hash = "sha256:047ad7bdd8f40b04b8625abfd119a35d18b344301c60ea9ddf63964e7ce19669"},
@@ -69,7 +69,7 @@ description = "ASDF serialization support for astropy"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asdf-astropy-0.6.1.tar.gz", hash = "sha256:97aef973a0e585a36314b5215948dfc1ac76d44ce32e16af1592f91ca3bcf2c6"},
     {file = "asdf_astropy-0.6.1-py3-none-any.whl", hash = "sha256:327c2826e0e0bdb144820df43f2afd782562549c1d577914306216ed11fb8508"},
@@ -95,7 +95,7 @@ description = "ASDF schemas for coordinates"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asdf_coordinates_schemas-0.3.0-py3-none-any.whl", hash = "sha256:9afe55443b9e6ab80c95fe57befef353ead0a95c5714904da29965c63ca81451"},
     {file = "asdf_coordinates_schemas-0.3.0.tar.gz", hash = "sha256:c98b6015dcec87a158fcde7798583f0615d08125fa6e1e9de16c4eb03fcd604e"},
@@ -116,7 +116,7 @@ description = "The ASDF Standard schemas"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asdf_standard-1.1.1-py3-none-any.whl", hash = "sha256:9b559b5d43f086a3e9e12604fb591e056e5d8c0b4a1d2d99a011d278afbc6fd8"},
     {file = "asdf_standard-1.1.1.tar.gz", hash = "sha256:01535bc2b15bfc09ec8a62d4999f9cf32dc49dc71660c8425640228fd8776102"},
@@ -133,7 +133,7 @@ description = "ASDF schemas for transforms"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asdf_transform_schemas-0.5.0-py3-none-any.whl", hash = "sha256:9f91bfd964b905d0deff269b057a75b2b3745c462c3b9e7897242844fbc4cfe8"},
     {file = "asdf_transform_schemas-0.5.0.tar.gz", hash = "sha256:82cf4c782575734a895327f25ff583ce9499d7e2b836fe8880b2d7961c6b462b"},
@@ -153,7 +153,7 @@ description = "ASDF WCS schemas"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asdf_wcs_schemas-0.4.0-py3-none-any.whl", hash = "sha256:ffd0dc9d01ff453c8e81793f93a76c4cdd7780b0156d39c93b8017df49180a01"},
     {file = "asdf_wcs_schemas-0.4.0.tar.gz", hash = "sha256:c0bb44b8a5f16e2e23b028bcf4360729f5047a8d19063f1c8d817590d0b308b4"},
@@ -175,7 +175,7 @@ description = "ASGI specs, helper code, and adapters"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
     {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
@@ -194,7 +194,7 @@ description = "Observation planning package for astronomers"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "astroplan-0.10.1.tar.gz", hash = "sha256:39d97c3377e1630abff3a94d8c956980f77a3e809e27a0376dd7d30abe3b6959"},
 ]
@@ -218,7 +218,7 @@ description = "Astronomy and astrophysics core library"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "astropy-5.3.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:a3a6c63abc95d094cd3062e32c1ebf80c07502e4f3094b1e276458db5ce6b6a2"},
     {file = "astropy-5.3.4-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:e85871ec762fc7eab2f7e716c97dad1b3c546bb75941ea7fae6c8eadd51f0bf8"},
@@ -271,7 +271,7 @@ description = "Functions and classes to access online astronomical data resource
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "astroquery-0.4.7-py3-none-any.whl", hash = "sha256:dfa8ca46ca0a983f66e9547c774601b331770242f9f6245df5e603f795d75540"},
     {file = "astroquery-0.4.7.tar.gz", hash = "sha256:047fbacb0a4faec4cdb62675e919c244c1c35e661044fcbb6c9a933331747ec9"},
@@ -298,7 +298,7 @@ description = "Annotate AST trees with source code positions"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "asttokens-3.0.2-py3-none-any.whl", hash = "sha256:9da13157f5b28becde0bd374fc677dcd3c290614264eff096f167c469cd9f933"},
     {file = "asttokens-3.0.2.tar.gz", hash = "sha256:3ecdbd8f2cc195f53ccada3a613538bb5f9ef6f6869129f13e03c30a677b8fe2"},
@@ -315,7 +315,7 @@ description = "Classes Without Boilerplate"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "attrs-24.2.0-py3-none-any.whl", hash = "sha256:81921eb96de3191c8258c199618104dd27ac608d9366f5e35d011eae1867ede2"},
     {file = "attrs-24.2.0.tar.gz", hash = "sha256:5cfb1b9148b5b086569baec03f20d7b6bf3bcacc9a42bebf87ffaaca362f6346"},
@@ -336,7 +336,7 @@ description = "Backport of CPython tarfile module"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version <= \"3.11\""
+markers = "python_version <= \"3.11\""
 files = [
     {file = "backports.tarfile-1.2.0-py3-none-any.whl", hash = "sha256:77e284d754527b01fb1e6fa8a1afe577858ebe4e9dad8919e34c862cb399bc34"},
     {file = "backports_tarfile-1.2.0.tar.gz", hash = "sha256:d75e02c268746e1b8144c278978b6e98e85de6ad16f8e4b0844a154557eca991"},
@@ -353,7 +353,7 @@ description = "Screen-scraping library"
 optional = false
 python-versions = ">=3.6.0"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "beautifulsoup4-4.12.3-py3-none-any.whl", hash = "sha256:b80878c9f40111313e55da8ba20bdba06d8fa3969fc68304167741bbf9e082ed"},
     {file = "beautifulsoup4-4.12.3.tar.gz", hash = "sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051"},
@@ -376,7 +376,7 @@ description = "A healpix manipulation library."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "cdshealpix-0.8.1-cp310-cp310-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:8bca2f0b317367ff36ee3f1684aca13c2de91840c10e5cb32c2486d295473cd2"},
     {file = "cdshealpix-0.8.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:3b647d0e6ffc11a211510fc98f61183093aceb5c1bdb67350f648755cd539f14"},
@@ -448,7 +448,7 @@ description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.6"
 groups = ["main", "coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "certifi-2024.8.30-py3-none-any.whl", hash = "sha256:922820b53db7a7257ffbda3f597266d435245903d80737e34f8a45ff3e3230d8"},
     {file = "certifi-2024.8.30.tar.gz", hash = "sha256:bec941d2aa8195e248a60b31ff9f0558284cf01a52591ceda73ea9afffd69fd9"},
@@ -461,7 +461,7 @@ description = "Foreign Function Interface for Python calling C code."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\") and platform_python_implementation != \"PyPy\""
+markers = "python_version <= \"3.11\" and platform_python_implementation != \"PyPy\" or python_version >= \"3.12\" and platform_python_implementation != \"PyPy\""
 files = [
     {file = "cffi-1.17.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:df8b1c11f177bc2313ec4b2d46baec87a5f3e71fc8b45dab2ee7cae86d9aba14"},
     {file = "cffi-1.17.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8f2cdc858323644ab277e9bb925ad72ae0e67f69e804f4898c070998d50b1a67"},
@@ -542,7 +542,7 @@ description = "The Real First Universal Charset Detector. Open, modern and activ
 optional = false
 python-versions = ">=3.7.0"
 groups = ["main", "coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "charset_normalizer-3.4.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:4f9fc98dad6c2eaa32fc3af1417d95b5e3d08aff968df0cd320066def971f9a6"},
     {file = "charset_normalizer-3.4.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0de7b687289d3c1b3e8660d0741874abe7888100efe14bd0f9fd7141bcbda92b"},
@@ -662,7 +662,7 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
-markers = {main = "sys_platform == \"win32\" and (python_version <= \"3.11\" or python_version >= \"3.12\")", coverage = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\") and platform_system == \"Windows\""}
+markers = {main = "python_version <= \"3.11\" and sys_platform == \"win32\" or python_version >= \"3.12\" and sys_platform == \"win32\"", coverage = "python_version <= \"3.11\" and platform_system == \"Windows\" or python_version >= \"3.12\" and platform_system == \"Windows\""}
 
 [[package]]
 name = "contourpy"
@@ -671,7 +671,7 @@ description = "Python library for calculating contours of 2D quadrilateral grids
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "contourpy-1.3.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:ba38e3f9f330af820c4b27ceb4b9c7feee5fe0493ea53a8720f4792667465934"},
     {file = "contourpy-1.3.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:dc41ba0714aa2968d1f8674ec97504a8f7e334f48eeacebcaa6256213acb0989"},
@@ -749,7 +749,7 @@ description = "Code coverage measurement for Python"
 optional = false
 python-versions = ">=3.10"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "coverage-7.15.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9b5bd92ff1ec22e535eab0de75fa6db021992791f461a2aceb7822c625a1187d"},
     {file = "coverage-7.15.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:44826758cfe73fcd0e6af5deb4ba6d5417cc1d13df3acb35c93484a11160f846"},
@@ -857,7 +857,7 @@ description = "Show coverage stats online via coveralls.io"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "coveralls-4.1.0-py3-none-any.whl", hash = "sha256:bfacfda2d443c24fc90d67035027cec15015fff2dbd036427e8bf8f4953dda2e"},
     {file = "coveralls-4.1.0.tar.gz", hash = "sha256:dab364025ba80cbb95ce56c6fc62cd9172d7fd637060ea235dde99d9b46a4494"},
@@ -878,7 +878,7 @@ description = "Bootstrap5 template pack for django-crispy-forms"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "crispy_bootstrap5-2026.3-py3-none-any.whl", hash = "sha256:e0fff85c0503e9aed610a0ee31368e2191d340657f813669491c288c1c2e2dfa"},
     {file = "crispy_bootstrap5-2026.3.tar.gz", hash = "sha256:e7f5adb36acfbb456444c46e82c436931c796c539e9c620be4fa9dc9c9d6679c"},
@@ -895,7 +895,7 @@ description = "cryptography is a package which provides cryptographic recipes an
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "cryptography-43.0.3-cp37-abi3-macosx_10_9_universal2.whl", hash = "sha256:bf7a1932ac4176486eab36a19ed4c0492da5d97123f1406cf15e41b05e787d2e"},
     {file = "cryptography-43.0.3-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:63efa177ff54aec6e1c0aefaa1a241232dcd37413835a9b674b6e3f0ae2bfd3e"},
@@ -946,7 +946,7 @@ description = "Composable style cycles"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "cycler-0.12.1-py3-none-any.whl", hash = "sha256:85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30"},
     {file = "cycler-0.12.1.tar.gz", hash = "sha256:88bb128f02ba341da8ef447245a9e138fae777f6a23943da4540077d3601eb1c"},
@@ -963,7 +963,7 @@ description = "Decorators for Humans"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "decorator-5.3.1-py3-none-any.whl", hash = "sha256:f47fe6fdbd2edd623ecfe36875d37aba411624e2670dd395dddae1358689bb3c"},
     {file = "decorator-5.3.1.tar.gz", hash = "sha256:4cbcdd55a6efadb9dbea26b858f4fb3264567b52d69ca0d25b721b553f60ea82"},
@@ -976,7 +976,7 @@ description = "A high-level Python web framework that encourages rapid developme
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django-5.2.16-py3-none-any.whl", hash = "sha256:04f354bf9d807a86ad1a8392fe3808d362358a8eafc322848e0e43e59b24371d"},
     {file = "django-5.2.16.tar.gz", hash = "sha256:59ea02020c3136fce14bef0bbece21a10a4febef5eed1c51c22ae468efa22200"},
@@ -998,7 +998,7 @@ description = "Bootstrap 5 for Django"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_bootstrap5-26.2-py3-none-any.whl", hash = "sha256:179af37c59f4e9b1070fc650f30961c5d903c2c0ad60280ad5b63ed394f68658"},
     {file = "django_bootstrap5-26.2.tar.gz", hash = "sha256:12331059c8230ba372ffaad990a706151e1ad8f721a870aa2e862cf6746f0d33"},
@@ -1017,7 +1017,7 @@ description = "The code formerly known as django.contrib.comments."
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django-contrib-comments-2.2.0.tar.gz", hash = "sha256:48de00f15677e016a216aeff205d6e00e4391c9a5702136c64119c472b7356da"},
     {file = "django_contrib_comments-2.2.0-py3-none-any.whl", hash = "sha256:2ca79060bbc8fc5b636981ef6e50f35ab83649af75fc1be47bf770636be3271c"},
@@ -1033,7 +1033,7 @@ description = "Best way to have Django DRY forms"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_crispy_forms-2.3-py3-none-any.whl", hash = "sha256:efc4c31e5202bbec6af70d383a35e12fc80ea769d464fb0e7fe21768bb138a20"},
     {file = "django_crispy_forms-2.3.tar.gz", hash = "sha256:2db17ae08527201be1273f0df789e5f92819e23dd28fec69cffba7f3762e1a38"},
@@ -1049,7 +1049,7 @@ description = "Extensions for Django"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django-extensions-3.2.3.tar.gz", hash = "sha256:44d27919d04e23b3f40231c4ab7af4e61ce832ef46d610cc650d53e68328410a"},
     {file = "django_extensions-3.2.3-py3-none-any.whl", hash = "sha256:9600b7562f79a92cbf1fde6403c04fee314608fefbb595502e34383ae8203401"},
@@ -1065,7 +1065,7 @@ description = "Django-filter is a reusable Django application for allowing users
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_filter-24.3-py3-none-any.whl", hash = "sha256:c4852822928ce17fb699bcfccd644b3574f1a2d80aeb2b4ff4f16b02dd49dc64"},
     {file = "django_filter-24.3.tar.gz", hash = "sha256:d8ccaf6732afd21ca0542f6733b11591030fa98669f8d15599b358e24a2cd9c3"},
@@ -1081,7 +1081,7 @@ description = "Essential Gravatar support for Django. Features helper methods, t
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_gravatar2-1.4.5-py2.py3-none-any.whl", hash = "sha256:7e6c8f63f59b0077d42402531684807ea6295867ebd2195a638d87b851f0d41c"},
     {file = "django_gravatar2-1.4.5.tar.gz", hash = "sha256:2dbb56465e395dd8b3920d4017e27a4756912cc2ad9b11ba48cf143871a80364"},
@@ -1094,7 +1094,7 @@ description = "Implementation of per object permissions for Django."
 optional = false
 python-versions = ">=3.5"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django-guardian-2.4.0.tar.gz", hash = "sha256:c58a68ae76922d33e6bdc0e69af1892097838de56e93e78a8361090bcd9f89a0"},
     {file = "django_guardian-2.4.0-py3-none-any.whl", hash = "sha256:440ca61358427e575323648b25f8384739e54c38b3d655c81d75e0cd0d61b697"},
@@ -1110,7 +1110,7 @@ description = "Extensions for using Django with htmx."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_htmx-1.21.0-py3-none-any.whl", hash = "sha256:64bc31463017a80552b767bc216ee5700248fa72e7ccd2963495e69afbdb6abe"},
     {file = "django_htmx-1.21.0.tar.gz", hash = "sha256:6ed3b42effd5980f22e68f36cd14ee4311bff3b6cb8435a89e27f45995691572"},
@@ -1127,7 +1127,7 @@ description = "Monkey-patching and extensions for django-stubs"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_stubs_ext-6.0.7-py3-none-any.whl", hash = "sha256:53a9c7c5a7c7e718cc6308cfce1e7470f2cac0b9d38dbcd60fbfa82704f1d592"},
     {file = "django_stubs_ext-6.0.7.tar.gz", hash = "sha256:c3172c5126614fd2a44d0196b313b44c21f717cb09477ba52b447d41f4ce613e"},
@@ -1144,7 +1144,7 @@ description = "Table/data-grid framework for Django"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_tables2-3.0.0-py3-none-any.whl", hash = "sha256:2a5b5447f10d7a8cfb7a2e8f0b139d969c7eb2e675079a4b8ba0107956345bfa"},
     {file = "django_tables2-3.0.0.tar.gz", hash = "sha256:3c5343f72663b0d6684e8e6cbcb16caae10d7621a51c1cf3c581f57ce605f8ee"},
@@ -1163,7 +1163,7 @@ description = "An implementation and backport of background workers and tasks in
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "django_tasks-0.6.1-py3-none-any.whl", hash = "sha256:b3648e28bdcda809cb7831f3aff98aa46c327025447c462b8943cce9dfbb0281"},
     {file = "django_tasks-0.6.1.tar.gz", hash = "sha256:4086e7eb9e965f79c4ac76f5c3690ec3bf41c461585237b71b4bde729ced9826"},
@@ -1186,7 +1186,7 @@ description = "Web APIs for Django, made easy."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "djangorestframework-3.15.2-py3-none-any.whl", hash = "sha256:2b8871b062ba1aefc2de01f773875441a961fefbf79f5eed1e32b2f096944b20"},
     {file = "djangorestframework-3.15.2.tar.gz", hash = "sha256:36fe88cd2d6c6bec23dca9804bab2ba5517a8bb9d8f47ebc68981b56840107ad"},
@@ -1202,7 +1202,7 @@ description = "Backport of PEP 654 (exception groups)"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version < \"3.11\""
+markers = "python_version < \"3.11\""
 files = [
     {file = "exceptiongroup-1.3.1-py3-none-any.whl", hash = "sha256:a7a39a3bd276781e98394987d3a5701d0c4edffb633bb7a5144577f82c773598"},
     {file = "exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219"},
@@ -1221,7 +1221,7 @@ description = "Get the currently executing AST node of a frame, and other inform
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "executing-2.2.1-py2.py3-none-any.whl", hash = "sha256:760643d3452b4d777d295bb167ccc74c64a81df23fb5e08eff250c425a4b2017"},
     {file = "executing-2.2.1.tar.gz", hash = "sha256:3632cc370565f6648cc328b32435bd120a1e4ebb20c77e3fdde9a13cd1e533c4"},
@@ -1237,7 +1237,7 @@ description = "A versatile test fixtures replacement based on thoughtbot's facto
 optional = false
 python-versions = ">=3.8"
 groups = ["test"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "factory_boy-3.3.3-py2.py3-none-any.whl", hash = "sha256:1c39e3289f7e667c4285433f305f8d506efc2fe9c73aaea4151ebd5cdea394fc"},
     {file = "factory_boy-3.3.3.tar.gz", hash = "sha256:866862d226128dfac7f2b4160287e899daf54f2612778327dd03d0e2cb1e3d03"},
@@ -1257,7 +1257,7 @@ description = "Faker is a Python package that generates fake data for you."
 optional = false
 python-versions = ">=3.10"
 groups = ["test"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "faker-40.31.0-py3-none-any.whl", hash = "sha256:bedc97c292a48a6a1bbe471a9076d7395a196421ede1cedde99d5719f6b91027"},
     {file = "faker-40.31.0.tar.gz", hash = "sha256:af163a937aec99dca5abaeb94dd5008c51c26c6e9af1a26c8db4b3c4e7ca4403"},
@@ -1276,7 +1276,7 @@ description = "Common libraries for the conversion and scaling of fits images"
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "fits2image-0.4.9-py3-none-any.whl", hash = "sha256:144e6bd4dae0b565b48d82e6ca8d4e76b32562cc09069e0e7fbf28d20152cbdf"},
     {file = "fits2image-0.4.9.tar.gz", hash = "sha256:0b1743cfd6f272f9df95a3fdb496f0a89fb5f8a29200db05d6f8f4ea63b7c304"},
@@ -1294,7 +1294,7 @@ description = "the modular source code checker: pep8 pyflakes and co"
 optional = false
 python-versions = ">=3.9"
 groups = ["lint"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "flake8-7.3.0-py2.py3-none-any.whl", hash = "sha256:b9696257b9ce8beb888cdbe31cf885c90d31928fe202be0889a7cdafad32f01e"},
     {file = "flake8-7.3.0.tar.gz", hash = "sha256:fe044858146b9fc69b551a4b490d69cf960fcb78ad1edcb84e7fbb1b4a8e3872"},
@@ -1312,7 +1312,7 @@ description = "Tools to manipulate font files"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "fonttools-4.63.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:e3297a6a4059b4acc3a1e9a8b04741f240a80044eef08ebd32e8b5bcdddce75b"},
     {file = "fonttools-4.63.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:b1cd75a03ad8cb5bc40c90bfde68c0c47de423aa19e5c0f362b43520645eea94"},
@@ -1386,7 +1386,7 @@ description = "Generalized World Coordinate System"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "gwcs-0.21.0-py3-none-any.whl", hash = "sha256:5a89f512d2a9b2933534fa454b0f34361f714d896f53d9a4b9d1b3a2831b58cc"},
     {file = "gwcs-0.21.0.tar.gz", hash = "sha256:8cd27f1ce6b25ad72cc33ca2e4178ab29d82050344c710713f74992136a1c5ba"},
@@ -1411,7 +1411,7 @@ description = "HTML parser based on the WHATWG HTML specification"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "html5lib-1.1-py2.py3-none-any.whl", hash = "sha256:0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d"},
     {file = "html5lib-1.1.tar.gz", hash = "sha256:b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f"},
@@ -1434,7 +1434,7 @@ description = "Internationalized Domain Names in Applications (IDNA)"
 optional = false
 python-versions = ">=3.6"
 groups = ["main", "coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "idna-3.10-py3-none-any.whl", hash = "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3"},
     {file = "idna-3.10.tar.gz", hash = "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9"},
@@ -1450,7 +1450,7 @@ description = "Read metadata from Python packages"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version <= \"3.11\""
+markers = "python_version <= \"3.11\""
 files = [
     {file = "importlib_metadata-8.5.0-py3-none-any.whl", hash = "sha256:45e54197d28b7a7f1559e60b95e7c567032b602131fbd588f1497f47880aa68b"},
     {file = "importlib_metadata-8.5.0.tar.gz", hash = "sha256:71522656f0abace1d072b9e5481a48f07c138e00f079c38c8f883823f9c26bd7"},
@@ -1475,7 +1475,7 @@ description = "Read resources from Python packages"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "importlib_resources-6.4.5-py3-none-any.whl", hash = "sha256:ac29d5f956f01d5e4bb63102a5a19957f1b9175e45649977264a1416783bb717"},
     {file = "importlib_resources-6.4.5.tar.gz", hash = "sha256:980862a1d16c9e147a59603677fa2aa5fd82b87f223b6cb870695bcfce830065"},
@@ -1496,7 +1496,7 @@ description = "IPython: Productive Interactive Computing"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "ipython-8.39.0-py3-none-any.whl", hash = "sha256:bb3c51c4fa8148ab1dea07a79584d1c854e234ea44aa1283bcb37bc75054651f"},
     {file = "ipython-8.39.0.tar.gz", hash = "sha256:4110ae96012c379b8b6db898a07e186c40a2a1ef5d57a7fa83166047d9da7624"},
@@ -1536,7 +1536,7 @@ description = "Utility functions for Python class constructs"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "jaraco.classes-3.4.0-py3-none-any.whl", hash = "sha256:f662826b6bed8cace05e7ff873ce0f9283b5c924470fe664fff1c2f00f581790"},
     {file = "jaraco.classes-3.4.0.tar.gz", hash = "sha256:47a024b51d0239c0dd8c8540c6c7f484be3b8fcf0b2d85c13825780d3b3f3acd"},
@@ -1556,7 +1556,7 @@ description = "Useful decorators and context managers"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "jaraco.context-6.0.1-py3-none-any.whl", hash = "sha256:f797fc481b490edb305122c9181830a3a5b76d84ef6d1aef2fb9b47ab956f9e4"},
     {file = "jaraco_context-6.0.1.tar.gz", hash = "sha256:9bae4ea555cf0b14938dc0aee7c9f32ed303aa20a3b73e7dc80111628792d1b3"},
@@ -1576,7 +1576,7 @@ description = "Functools like those found in stdlib"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "jaraco.functools-4.1.0-py3-none-any.whl", hash = "sha256:ad159f13428bc4acbf5541ad6dec511f91573b90fba04df61dafa2a1231cf649"},
     {file = "jaraco_functools-4.1.0.tar.gz", hash = "sha256:70f7e0e2ae076498e212562325e805204fc092d7b4c17e0e86c959e249701a9d"},
@@ -1600,7 +1600,7 @@ description = "An autocompletion tool for Python that can be used for text edito
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "jedi-0.20.0-py2.py3-none-any.whl", hash = "sha256:7bdd9c2634f56713299976f4cbd59cb3fa92165cc5e05ea811fb253480728b67"},
     {file = "jedi-0.20.0.tar.gz", hash = "sha256:c3f4ccbd276696f4b19c54618d4fb18f9fc24b0aef02acf704b23f487daa1011"},
@@ -1620,7 +1620,7 @@ description = "Low-level, pure Python DBus protocol wrapper."
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "sys_platform == \"linux\" and python_version <= \"3.11\" or sys_platform == \"linux\" and python_version >= \"3.12\""
+markers = "python_version <= \"3.11\" and sys_platform == \"linux\" or python_version >= \"3.12\" and sys_platform == \"linux\""
 files = [
     {file = "jeepney-0.8.0-py3-none-any.whl", hash = "sha256:c0a454ad016ca575060802ee4d590dd912e35c122fa04e70306de3d076cce755"},
     {file = "jeepney-0.8.0.tar.gz", hash = "sha256:5efe48d255973902f6badc3ce55e2aa6c5c3b3bc642059ef3a91247bcfcc5806"},
@@ -1637,7 +1637,7 @@ description = "JSON Matching Expressions"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
     {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
@@ -1650,7 +1650,7 @@ description = "Store and access your passwords safely."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "keyring-25.5.0-py3-none-any.whl", hash = "sha256:e67f8ac32b04be4714b42fe84ce7dad9c40985b9ca827c592cc303e7c26d9741"},
     {file = "keyring-25.5.0.tar.gz", hash = "sha256:4c753b3ec91717fe713c4edd522d625889d8973a349b0e582622f49766de58e6"},
@@ -1681,7 +1681,7 @@ description = "A fast implementation of the Cassowary constraint solver"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "kiwisolver-1.5.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:32cc0a5365239a6ea0c6ed461e8838d053b57e397443c0ca894dcc8e388d4374"},
     {file = "kiwisolver-1.5.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:cc0b66c1eec9021353a4b4483afb12dfd50e3669ffbb9152d6842eb34c7e29fd"},
@@ -1809,7 +1809,7 @@ description = "Python implementation of John Gruber's Markdown."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "Markdown-3.7-py3-none-any.whl", hash = "sha256:7eb6df5690b81a1d7942992c97fad2938e956e79df20cbc6186e9c3a77b1c803"},
     {file = "markdown-3.7.tar.gz", hash = "sha256:2ae2471477cfd02dbbf038d5d9bc226d40def84b4fe2986e49b59b6b472bbed2"},
@@ -1826,7 +1826,7 @@ description = "Python port of markdown-it. Markdown parsing, done right!"
 optional = false
 python-versions = ">=3.10"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "markdown_it_py-4.2.0-py3-none-any.whl", hash = "sha256:9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a"},
     {file = "markdown_it_py-4.2.0.tar.gz", hash = "sha256:04a21681d6fbb623de53f6f364d352309d4094dd4194040a10fd51833e418d49"},
@@ -1851,7 +1851,7 @@ description = "Python plotting package"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "matplotlib-3.10.9-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:77210dce9cb8153dffc967efaae990543392563d5a376d4dd8539bebcb0ed217"},
     {file = "matplotlib-3.10.9-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:1e7698ac9868428e84d2c967424803b2472ff7167d9d6590d4204ed775343c3b"},
@@ -1931,7 +1931,7 @@ description = "Inline Matplotlib backend for Jupyter"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "matplotlib_inline-0.2.2-py3-none-any.whl", hash = "sha256:3c821cf1c209f59fb2d2d64abbf5b23b67bcb2210d663f9918dd851c6da1fcf6"},
     {file = "matplotlib_inline-0.2.2.tar.gz", hash = "sha256:72f3fe8fce36b70d4a5b612f899090cd0401deddc4ea90e1572b9f4bfb058c79"},
@@ -1950,7 +1950,7 @@ description = "McCabe checker, plugin for flake8"
 optional = false
 python-versions = ">=3.6"
 groups = ["lint"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "mccabe-0.7.0-py2.py3-none-any.whl", hash = "sha256:6c2d30ab6be0e4a46919781807b4f0d834ebdd6c6e3dca0bda5a15f863427b6e"},
     {file = "mccabe-0.7.0.tar.gz", hash = "sha256:348e0240c33b60bbdf4e523192ef919f28cb2c3d7d5c7794f74009290f236325"},
@@ -1963,7 +1963,7 @@ description = "Markdown URL utilities"
 optional = false
 python-versions = ">=3.7"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8"},
     {file = "mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba"},
@@ -1976,7 +1976,7 @@ description = ""
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "mocpy-0.19.1-cp310-cp310-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:3b49a41140f9f6984243213fe3dcecb422f76560e4daa3584ab21599cc65ab5d"},
     {file = "mocpy-0.19.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:66b26158bc2136f90bf06b601b575e7668c4f7aee95c491fcc2192e56e253e76"},
@@ -2039,7 +2039,7 @@ description = "More routines for operating on iterables, beyond itertools"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "more-itertools-10.5.0.tar.gz", hash = "sha256:5482bfef7849c25dc3c6dd53a6173ae4795da2a41a80faea6700d9f5846c5da6"},
     {file = "more_itertools-10.5.0-py3-none-any.whl", hash = "sha256:037b0d3203ce90cca8ab1defbbdac29d5f993fc20131f3664dc8d6acfa872aef"},
@@ -2052,7 +2052,7 @@ description = "A package for multi-dimensional contiguous and non-contiguous coo
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "ndcube-2.2.4-py3-none-any.whl", hash = "sha256:e6b728c685d6331ed6a322bdb3a0f35ddbf76c604d320df11eaca9bc09de9dfd"},
     {file = "ndcube-2.2.4.tar.gz", hash = "sha256:43cef0d75f501445cbae19a593cefb8c10ef0796deca3fb661f1be3808b68422"},
@@ -2078,7 +2078,7 @@ description = "Fundamental package for array computing in Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "numpy-1.26.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9ff0f4f29c51e2803569d7a51c2304de5554655a60c5d776e35b4a41413830d0"},
     {file = "numpy-1.26.4-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:2e4ee3380d6de9c9ec04745830fd9e2eccb3e6cf790d39d7b98ffd19b0dd754a"},
@@ -2125,7 +2125,7 @@ description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "packaging-24.2-py3-none-any.whl", hash = "sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759"},
     {file = "packaging-24.2.tar.gz", hash = "sha256:c228a6dc5e932d346bc5739379109d49e8853dd8223571c7c5b55260edc0b97f"},
@@ -2138,7 +2138,7 @@ description = "Powerful data structures for data analysis, time series, and stat
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pandas-2.3.3-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:376c6446ae31770764215a6c937f72d917f214b43560603cd60da6408f183b6c"},
     {file = "pandas-2.3.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:e19d192383eab2f4ceb30b412b22ea30690c9e618f78870357ae1d682912015a"},
@@ -2239,7 +2239,7 @@ description = "A Python Parser"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "parso-0.8.7-py2.py3-none-any.whl", hash = "sha256:a8926eb2a1b915486941fdbd31e86a4baf88fe8c210f25f2f35ecec5b574ca1c"},
     {file = "parso-0.8.7.tar.gz", hash = "sha256:eaaac4c9fdd5e9e8852dc778d2d7405897ec510f2a298071453e5e3a07914bb1"},
@@ -2256,7 +2256,7 @@ description = "Pexpect allows easy control of interactive console applications."
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version <= \"3.11\" or (sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version >= \"3.12\""
+markers = "python_version <= \"3.11\" and (sys_platform != \"win32\" and sys_platform != \"emscripten\") or python_version >= \"3.12\" and (sys_platform != \"win32\" and sys_platform != \"emscripten\")"
 files = [
     {file = "pexpect-4.9.0-py2.py3-none-any.whl", hash = "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523"},
     {file = "pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f"},
@@ -2272,7 +2272,7 @@ description = "Python Imaging Library (Fork)"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pillow-11.0.0-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:6619654954dc4936fcff82db8eb6401d3159ec6be81e33c6000dfd76ae189947"},
     {file = "pillow-11.0.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:b3c5ac4bed7519088103d9450a1107f76308ecf91d6dabc8a33a2fcfb18d0fba"},
@@ -2366,7 +2366,7 @@ description = "An open-source, interactive data visualization library for Python
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "plotly-5.24.1-py3-none-any.whl", hash = "sha256:f67073a1e637eb0dc3e46324d9d51e2fe76e9727c892dde64ddf1e1b51f29089"},
     {file = "plotly-5.24.1.tar.gz", hash = "sha256:dbc8ac8339d248a4bcc36e08a5659bacfe1b079390b8953533f4eb22169b4bae"},
@@ -2383,7 +2383,7 @@ description = "Library for building powerful interactive command lines in Python
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "prompt_toolkit-3.0.52-py3-none-any.whl", hash = "sha256:9aac639a3bbd33284347de5ad8d68ecc044b91a762dc39b7c21095fcd6a19955"},
     {file = "prompt_toolkit-3.0.52.tar.gz", hash = "sha256:28cde192929c8e7321de85de1ddbe736f1375148b02f2e17edd840042b1be855"},
@@ -2399,7 +2399,7 @@ description = "psycopg2 - Python-PostgreSQL Database Adapter"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "psycopg2_binary-2.9.12-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9b818ceff717f98851a64bffd4c5eb5b3059ae280276dcecc52ac658dcf006a4"},
     {file = "psycopg2_binary-2.9.12-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:d2fa0d7caca8635c56e373055094eeda3208d901d55dd0ff5abc1d4e47f82b56"},
@@ -2477,7 +2477,7 @@ description = "Run a subprocess in a pseudo terminal"
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version <= \"3.11\" or (sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version >= \"3.12\""
+markers = "python_version <= \"3.11\" and (sys_platform != \"win32\" and sys_platform != \"emscripten\") or python_version >= \"3.12\" and (sys_platform != \"win32\" and sys_platform != \"emscripten\")"
 files = [
     {file = "ptyprocess-0.7.0-py2.py3-none-any.whl", hash = "sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35"},
     {file = "ptyprocess-0.7.0.tar.gz", hash = "sha256:5c5d0a3b48ceee0b48485e0c26037c0acd7d29765ca3fbb5cb3831d347423220"},
@@ -2490,7 +2490,7 @@ description = "Safely evaluate AST nodes without side effects"
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pure_eval-0.2.3-py3-none-any.whl", hash = "sha256:1db8e35b67b3d218d818ae653e27f06c3aa420901fa7b081ca98cbedc874e0d0"},
     {file = "pure_eval-0.2.3.tar.gz", hash = "sha256:5f4e983f40564c576c7c8635ae88db5956bb2229d7e9237d03b3c0b0190eaf42"},
@@ -2506,7 +2506,7 @@ description = "Python style guide checker"
 optional = false
 python-versions = ">=3.9"
 groups = ["lint"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pycodestyle-2.14.0-py2.py3-none-any.whl", hash = "sha256:dd6bf7cb4ee77f8e016f9c8e74a35ddd9f67e1d5fd4184d86c3b98e07099f42d"},
     {file = "pycodestyle-2.14.0.tar.gz", hash = "sha256:c4b5b517d278089ff9d0abdec919cd97262a3367449ea1c8b49b91529167b783"},
@@ -2519,7 +2519,7 @@ description = "C parser in Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\") and platform_python_implementation != \"PyPy\""
+markers = "python_version <= \"3.11\" and platform_python_implementation != \"PyPy\" or python_version >= \"3.12\" and platform_python_implementation != \"PyPy\""
 files = [
     {file = "pycparser-2.22-py3-none-any.whl", hash = "sha256:c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc"},
     {file = "pycparser-2.22.tar.gz", hash = "sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6"},
@@ -2532,7 +2532,7 @@ description = "Python bindings for ERFA"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pyerfa-2.0.1.5-cp39-abi3-macosx_10_9_x86_64.whl", hash = "sha256:b282d7c60c4c47cf629c484c17ac504fcb04abd7b3f4dfcf53ee042afc3a5944"},
     {file = "pyerfa-2.0.1.5-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:be1aeb70390dd03a34faf96749d5cabc58437410b4aab7213c512323932427df"},
@@ -2561,7 +2561,7 @@ description = "passive checker of Python programs"
 optional = false
 python-versions = ">=3.9"
 groups = ["lint"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pyflakes-3.4.0-py2.py3-none-any.whl", hash = "sha256:f742a7dbd0d9cb9ea41e9a24a918996e8170c799fa528688d40dd582c8265f4f"},
     {file = "pyflakes-3.4.0.tar.gz", hash = "sha256:b24f96fafb7d2ab0ec5075b7350b3d2d2218eab42003821c06344973d3ea2f58"},
@@ -2574,7 +2574,7 @@ description = "Pygments is a syntax highlighting package written in Python."
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pygments-2.18.0-py3-none-any.whl", hash = "sha256:b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a"},
     {file = "pygments-2.18.0.tar.gz", hash = "sha256:786ff802f32e91311bff3889f6e9a86e81505fe99f2735bb6d60ae0c5004f199"},
@@ -2590,7 +2590,7 @@ description = "pyparsing - Classes and methods to define and execute parsing gra
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pyparsing-3.3.2-py3-none-any.whl", hash = "sha256:850ba148bd908d7e2411587e247a1e4f0327839c40e2e5e6d05a007ecc69911d"},
     {file = "pyparsing-3.3.2.tar.gz", hash = "sha256:c777f4d763f140633dcb6d8a3eda953bf7a214dc4eff598413c070bcdc117cbc"},
@@ -2606,7 +2606,7 @@ description = "Extensions to the standard Python datetime module"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
     {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
@@ -2622,7 +2622,7 @@ description = "World timezone definitions, modern and historical"
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pytz-2024.2-py2.py3-none-any.whl", hash = "sha256:31c7c1817eb7fae7ca4b8c7ee50c72f93aa2dd863de768e1ef4245d426aa0725"},
     {file = "pytz-2024.2.tar.gz", hash = "sha256:2aa355083c50a0f93fa581709deac0c9ad65cca8a9e9beac660adcbd493c798a"},
@@ -2635,7 +2635,7 @@ description = "Astropy affiliated package for accessing Virtual Observatory data
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "pyvo-1.6-py3-none-any.whl", hash = "sha256:65740f565ffbe947c2a93aade9be905eaa3b0ab86660bb805e1beb3cc3ff4812"},
     {file = "pyvo-1.6.tar.gz", hash = "sha256:db6ef423e6008eba1ca68459e7e2a91dbc34cbe1bda2f29f64ba57d8df570caa"},
@@ -2657,7 +2657,7 @@ description = "A (partial) reimplementation of pywin32 using ctypes/cffi"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
-markers = "sys_platform == \"win32\" and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" and sys_platform == \"win32\" or python_version >= \"3.12\" and sys_platform == \"win32\""
 files = [
     {file = "pywin32-ctypes-0.2.3.tar.gz", hash = "sha256:d162dc04946d704503b2edc4d55f3dba5c1d539ead017afa00142c38b9885755"},
     {file = "pywin32_ctypes-0.2.3-py3-none-any.whl", hash = "sha256:8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8"},
@@ -2670,7 +2670,7 @@ description = "YAML parser and emitter for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "PyYAML-6.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0a9a2848a5b7feac301353437eb7d5957887edbf81d56e903999a75a3d743086"},
     {file = "PyYAML-6.0.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:29717114e51c84ddfba879543fb232a6ed60086602313ca38cce623c1d62cfbf"},
@@ -2734,7 +2734,7 @@ description = "Python HTTP for Humans."
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"},
     {file = "requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760"},
@@ -2757,7 +2757,7 @@ description = "Render rich text, tables, progress bars, syntax highlighting, mar
 optional = false
 python-versions = ">=3.9.0"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "rich-15.0.0-py3-none-any.whl", hash = "sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb"},
     {file = "rich-15.0.0.tar.gz", hash = "sha256:edd07a4824c6b40189fb7ac9bc4c52536e9780fbbfbddf6f1e2502c31b068c36"},
@@ -2777,7 +2777,7 @@ description = "Fundamental algorithms for scientific computing in Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "scipy-1.13.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:20335853b85e9a49ff7572ab453794298bcf0354d8068c5f6775a0eabf350aca"},
     {file = "scipy-1.13.1-cp310-cp310-macosx_12_0_arm64.whl", hash = "sha256:d605e9c23906d1994f55ace80e0125c587f96c020037ea6aa98d01b4bd2e222f"},
@@ -2821,7 +2821,7 @@ description = "Python bindings to FreeDesktop.org Secret Service API"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
-markers = "sys_platform == \"linux\" and python_version <= \"3.11\" or sys_platform == \"linux\" and python_version >= \"3.12\""
+markers = "python_version <= \"3.11\" and sys_platform == \"linux\" or python_version >= \"3.12\" and sys_platform == \"linux\""
 files = [
     {file = "SecretStorage-3.3.3-py3-none-any.whl", hash = "sha256:f356e6628222568e3af06f2eba8df495efa13b3b63081dafd4f7d9a7b7bc9f99"},
     {file = "SecretStorage-3.3.3.tar.gz", hash = "sha256:2403533ef369eca6d2ba81718576c5e0f564d5cca1b58f73a8b23e7d4eeebd77"},
@@ -2838,7 +2838,7 @@ description = "A library implementing the 'SemVer' scheme."
 optional = false
 python-versions = ">=2.7"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "semantic_version-2.10.0-py2.py3-none-any.whl", hash = "sha256:de78a3b8e0feda74cabc54aab2da702113e33ac9d9eb9d2389bcf1f58b7d9177"},
     {file = "semantic_version-2.10.0.tar.gz", hash = "sha256:bdabb6d336998cbb378d4b9db3a4b56a1e3235701dc05ea2690d9a997ed5041c"},
@@ -2855,7 +2855,7 @@ description = "Tool to Detect Surrounding Shell"
 optional = false
 python-versions = ">=3.7"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "shellingham-1.5.4-py2.py3-none-any.whl", hash = "sha256:7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686"},
     {file = "shellingham-1.5.4.tar.gz", hash = "sha256:8dbca0739d487e5bd35ab3ca4b36e11c4078f3a234bfce294b0a0291363404de"},
@@ -2868,7 +2868,7 @@ description = "Python 2 and 3 compatibility utilities"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
@@ -2881,7 +2881,7 @@ description = "A modern CSS selector implementation for Beautiful Soup."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "soupsieve-2.6-py3-none-any.whl", hash = "sha256:e72c4ff06e4fb6e4b5a9f0f55fe6e81514581fca1515028625d0f299c602ccc9"},
     {file = "soupsieve-2.6.tar.gz", hash = "sha256:e2e68417777af359ec65daac1057404a3c8a5455bb8abc36f1a9866ab1a51abb"},
@@ -2894,7 +2894,7 @@ description = "Package for spectroscopic astronomical data"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "specutils-1.20.3-py3-none-any.whl", hash = "sha256:f3a99e4822e443f46db03201f8a3af64848b968a6039369aabc7e00d137131f1"},
     {file = "specutils-1.20.3.tar.gz", hash = "sha256:2c3050e30f7614cb613b60fb97f84f1045f324cc8165ebbcc56560da943b348b"},
@@ -2921,7 +2921,7 @@ description = "A non-validating SQL parser."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "sqlparse-0.5.1-py3-none-any.whl", hash = "sha256:773dcbf9a5ab44a090f3441e2180efe2560220203dc2f8c0b0fa141e18b505e4"},
     {file = "sqlparse-0.5.1.tar.gz", hash = "sha256:bb6b4df465655ef332548e24f08e205afc81b9ab86cb1c45657a7ff173a3a00e"},
@@ -2938,7 +2938,7 @@ description = "Extract data from python stack frames and tracebacks for informat
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "stack_data-0.6.3-py3-none-any.whl", hash = "sha256:d5558e0c25a4cb0853cddad3d77da9891a08cb85dd9f9f91b9f8cd66e511e695"},
     {file = "stack_data-0.6.3.tar.gz", hash = "sha256:836a778de4fec4dcd1dcd89ed8abff8a221f58308462e1c4aa2a3cf30148f0b9"},
@@ -2959,7 +2959,7 @@ description = "Retry code until it succeeds"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "tenacity-9.0.0-py3-none-any.whl", hash = "sha256:93de0c98785b27fcf659856aa9f54bfbd399e29969b0621bc7f762bd441b4539"},
     {file = "tenacity-9.0.0.tar.gz", hash = "sha256:807f37ca97d62aa361264d497b0e31e92b8027044942bfa756160d908320d73b"},
@@ -2976,7 +2976,7 @@ description = "A lil' TOML parser"
 optional = false
 python-versions = ">=3.8"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_full_version <= \"3.11.0a6\""
+markers = "python_full_version <= \"3.11.0a6\""
 files = [
     {file = "tomli-2.1.0-py3-none-any.whl", hash = "sha256:a5c57c3d1c56f5ccdf89f6523458f60ef716e210fc47c4cfb188c5ba473e0391"},
     {file = "tomli-2.1.0.tar.gz", hash = "sha256:3f646cae2aec94e17d04973e4249548320197cfabdf130015d023de4b74d8ab8"},
@@ -2989,7 +2989,7 @@ description = "TOM Toolkit and base modules"
 optional = false
 python-versions = "<3.14,>=3.10.0"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "tomtoolkit-3.0.0-py3-none-any.whl", hash = "sha256:364e6c49e1d88c0e19e44a3a6bc059873984506cb38f7e02dc88ecd81348799d"},
     {file = "tomtoolkit-3.0.0.tar.gz", hash = "sha256:b23a2d54f621b0188db9d66c20a5d27709041bc81fe7fb03e386362bb7197a8e"},
@@ -3032,7 +3032,7 @@ description = "Traitlets Python configuration system"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "traitlets-5.15.1-py3-none-any.whl", hash = "sha256:770a53705f84b81ac107e83a1b3328ff2dae16094d8fc3cfc004e4b22dfd8e92"},
     {file = "traitlets-5.15.1.tar.gz", hash = "sha256:7b1c07854fe25acb39e009bae49f11b79ff6cbb2f27999104e9110e7a6b53722"},
@@ -3049,7 +3049,7 @@ description = "Typer, build great CLIs. Easy to code. Based on Python type hints
 optional = false
 python-versions = ">=3.10"
 groups = ["coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "typer-0.27.0-py3-none-any.whl", hash = "sha256:6f4b27631e47f077871b7dc30e933ec0131c1390fbe0e387ea5574b5bac9ccf1"},
     {file = "typer-0.27.0.tar.gz", hash = "sha256:629bd12ea5d13a17148125d9a264f949eb171fb3f120f9b04d85873cab054fa5"},
@@ -3068,7 +3068,7 @@ description = "Backported and Experimental Type Hints for Python 3.8+"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
     {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
@@ -3085,7 +3085,7 @@ files = [
     {file = "tzdata-2024.2-py2.py3-none-any.whl", hash = "sha256:a48093786cdcde33cad18c2555e8532f34422074448fbc874186f0abd79565cd"},
     {file = "tzdata-2024.2.tar.gz", hash = "sha256:7d85cc416e9382e69095b7bdf4afd9e3880418a2413feec7069d533d6b4e31cc"},
 ]
-markers = {main = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")", test = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\") and platform_system == \"Windows\""}
+markers = {main = "python_version <= \"3.11\" or python_version >= \"3.12\"", test = "python_version <= \"3.11\" and platform_system == \"Windows\" or python_version >= \"3.12\" and platform_system == \"Windows\""}
 
 [[package]]
 name = "urllib3"
@@ -3094,7 +3094,7 @@ description = "HTTP library with thread-safe connection pooling, file post, and 
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "coverage"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "urllib3-2.2.3-py3-none-any.whl", hash = "sha256:ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac"},
     {file = "urllib3-2.2.3.tar.gz", hash = "sha256:e7d814a81dad81e6caf2ec9fdedb284ecc9c73076b62654547cc64ccdcae26e9"},
@@ -3113,7 +3113,7 @@ description = "Measures the displayed width of unicode strings in a terminal"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "wcwidth-0.8.2-py3-none-any.whl", hash = "sha256:d63947694a0539a1d51e01eda7caf800c291020e6cdd7e28ad7b14dd33ad4f85"},
     {file = "wcwidth-0.8.2.tar.gz", hash = "sha256:91fbef97204b96a3d4d421609b80340b760cf33e26da123ff243d76b1fda8dda"},
@@ -3126,7 +3126,7 @@ description = "Character encoding aliases for legacy web content"
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and (python_version <= \"3.11\" or python_version >= \"3.12\")"
+markers = "python_version <= \"3.11\" or python_version >= \"3.12\""
 files = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},
     {file = "webencodings-0.5.1.tar.gz", hash = "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"},
@@ -3139,7 +3139,7 @@ description = "Backport of pathlib-compatible object wrapper for zip files"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "(sys_platform == \"win32\" or sys_platform == \"emscripten\" or sys_platform != \"win32\" and sys_platform != \"emscripten\") and python_version <= \"3.11\""
+markers = "python_version <= \"3.11\""
 files = [
     {file = "zipp-3.21.0-py3-none-any.whl", hash = "sha256:ac1bbe05fd2991f160ebce24ffbac5f6d11d83dc90891255885223d42b3cd931"},
     {file = "zipp-3.21.0.tar.gz", hash = "sha256:2c9958f6430a2040341a52eb608ed6dd93ef4392e02ffe219417c1b28b5dd1f4"},
@@ -3156,4 +3156,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "dccd2f0e7e5e504c7ca853aa24ca605bf8f83df36e21ae289bd801bf48c4bca7"
+content-hash = "16b6131fd6220e5f3c509a0b92e80da3240206a0f36708f1e1f90b83908d7a8c"

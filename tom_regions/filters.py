@@ -348,28 +348,28 @@ class RegionFilterSet(HTMXTableFilterSet):
                 f'<div class="row"><div class="col-md-12 mb-2">'
                 f'<a class="btn btn-link p-0'
                 f'{"" if advanced_in_use else " collapsed"}" '
-                f'data-toggle="collapse" href="#advancedFilters" role="button" '
+                f'data-bs-toggle="collapse" href="#advancedFilters" role="button" '
                 f'aria-expanded="{aria_expanded}" aria-controls="advancedFilters">'
                 f'Advanced &rsaquo;</a></div></div>'
             )
 
             helper.layout = Layout(
-                Row(Column("query", css_class="form-group col-md-3")),
+                Row(Column("query", css_class="mb-3 col-md-3")),
                 HTML(toggle_html),
                 Div(
                     Row(
-                        Column("name", css_class="form-group col-md-4"),
-                        Column("type", css_class="form-group col-md-4"),
-                        Column("regionlist__name", css_class="form-group col-md-4"),
+                        Column("name", css_class="mb-3 col-md-4"),
+                        Column("type", css_class="mb-3 col-md-4"),
+                        Column("regionlist__name", css_class="mb-3 col-md-4"),
                     ),
                     Row(
-                        Column("contains_point", css_class="form-group col-md-6"),
-                        Column("contains_target", css_class="form-group col-md-6"),
+                        Column("contains_point", css_class="mb-3 col-md-6"),
+                        Column("contains_target", css_class="mb-3 col-md-6"),
                     ),
-                    Row(Column("cone_search", css_class="form-group col-md-12")),
+                    Row(Column("cone_search", css_class="mb-3 col-md-12")),
                     Row(
-                        Column("area_min_deg2", css_class="form-group col-md-3"),
-                        Column("area_max_deg2", css_class="form-group col-md-3"),
+                        Column("area_min_deg2", css_class="mb-3 col-md-3"),
+                        Column("area_max_deg2", css_class="mb-3 col-md-3"),
                     ),
                     css_class=collapse_class,
                     css_id="advancedFilters",
