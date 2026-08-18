@@ -31,6 +31,39 @@ class TomRegionsConfig(AppConfig):
         from tom_regions.healpix_django import assert_postgres_supported
 
         assert_postgres_supported()
+        self._connect_target_healpix_signals()
+
+    def _connect_target_healpix_signals(self) -> None:
+        """Wire Target -> TargetHealpix cache maintenance, if tom_targets is present.
+
+        tom_regions keeps a deepest-level HEALPix point per target in a side
+        table so region-membership queries are a single indexed join. The cache
+        is maintained by ``post_save`` / ``post_delete`` on the Target model. We
+        connect the receivers here -- after the app registry is ready -- and only
+        when tom_targets is installed. A TOM without it simply never gets the
+        signals, which is correct: the plugin owns its own integration, and the
+        geometry / skymap features do not need tom_targets at all.
+        """
+        try:
+            from tom_targets.models import Target
+        except Exception:
+            # tom_targets not installed (e.g. the standalone test boot).
+            return
+
+        from django.db.models.signals import post_delete, post_save
+
+        from tom_regions.signals import delete_target_healpix, update_target_healpix
+
+        post_save.connect(
+            update_target_healpix,
+            sender=Target,
+            dispatch_uid="tom_regions_target_healpix_save",
+        )
+        post_delete.connect(
+            delete_target_healpix,
+            sender=Target,
+            dispatch_uid="tom_regions_target_healpix_delete",
+        )
 
     # ------------------------------------------------------------------
     # TOMToolkit plugin hooks. Phase 1 ships intentional no-ops; Phase 2
