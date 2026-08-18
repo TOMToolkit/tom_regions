@@ -4,7 +4,7 @@ Materializes a minimal Django configuration via :func:`boot_django`,
 then invokes ``manage.py test`` against the package. The CI workflow at
 ``.github/workflows/run-tests.yml`` runs::
 
-    poetry install --with dev
+    poetry install --with test
     python tom_regions/tests/run_tests.py
 
 Test discovery

@@ -1,28 +1,64 @@
-[tool.poetry]
+[project]
 name = "tom-regions"
-version = "0.1.0"
-description = "A TOMToolkit application."
-authors = ["TOMToolkit Team <tomtoolit-maintiners@lco.global>"]
+description = "Sky regions for TOM Toolkit: HEALPix/MOC-backed region models, spatial queries, and skymap ingest."
+authors = [
+    {name = "William Lindstrom", email = "llindstrom@lco.global"}
+]
+maintainers = [
+    {name = "Joey Chatelain", email = "jchate6@lco.global"},
+    {name = "William Lindstrom", email = "llindstrom@lco.global"},
+    {name = "Rachel Street", email = "rstreet@lco.global"},
+]
+license = {text = "GPL-3.0-only"}
 readme = "README.md"
+dynamic = ["version"]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "tomtoolkit (>=3.0,<4.0)",
+    "psycopg2-binary (>=2.9)",
+    "mocpy (>=0.16,<0.20)",
+    "cdshealpix (>=0.6)",
+    "astropy (>=5.3)",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.12,<3.14"
-tomtoolkit = ">=2.32"
-# PostgreSQL driver. tom_regions requires PostgreSQL >= 14 for int8range,
-# int8multirange, and range_agg.
-psycopg2-binary = ">=2.9"
-# Multi-Order Coverage (MOC) operations.
-mocpy = ">=0.16,<0.20"
-# Fast HEALPix point conversions (lonlat -> ipix at a chosen depth).
-# mocpy and cdshealpix share a Rust core but mocpy 0.19 no longer
-# re-exports cdshealpix as a Python dep, so we declare it explicitly.
-cdshealpix = ">=0.6"
+[project.urls]
+Repository = "https://github.com/TOMToolkit/tom_regions"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry]
+version = "0.0.0" # version supplied by poetry-dynamic-versioning
+
+[tool.poetry.group.test.dependencies]
 factory-boy = ">=3.3"
-flake8 = ">=7.0"
 
+[tool.poetry.group.coverage.dependencies]
+coverage = ">=6,<8" # coveralls needs ~6 even though 7.3.2 is latest
+coveralls = ">=3,<5"
+
+[tool.poetry.group.lint.dependencies]
+flake8 = ">=7.0,<7.4"
+
+[tool.poetry.requires-plugins]
+poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
+# the default pattern regex makes the 'v' mandatory
+# this pattern modifies the default regex in order to make the 'v' optional
+# ('v' becomes '[v]?' meaning a single v, [v], and ? means optional)
+pattern = "(?x)^[v]?((?P<epoch>\\d+)!)?(?P<base>\\d+(\\.\\d+)*)([-._]?((?P<stage>[a-zA-Z]+)[-._]?(?P<revision>\\d+)?))?(\\+(?P<tagged_metadata>.+))?$"
+
+# substitute version not only in pyproject.toml (which the config block above does)
+# but also the __version__.py file (using the default value of the files property).
+[tool.poetry-dynamic-versioning.substitution]
+
+# Coverage configuration for the publish_coverage CI job; the migrations
+# and the test harness itself are not meaningful coverage targets.
+[tool.coverage.run]
+source = ["tom_regions"]
+omit = ["*/migrations/*", "*/tests/*"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core >=2.0.0, <3.0.0", "poetry-dynamic-versioning >=0.22.0"]
+build-backend = "poetry_dynamic_versioning.backend"

@@ -32,7 +32,7 @@ Running the tests
 ::
 
     docker compose up -d                        # if not already running
-    poetry install --with dev
+    poetry install --with test
     python tom_regions/tests/run_tests.py
 """
 
