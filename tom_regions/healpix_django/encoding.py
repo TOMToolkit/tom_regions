@@ -229,7 +229,7 @@ def skycoord_to_point(skycoord) -> int:
     # attributes of a SkyCoord directly.
     ipix = lonlat_to_healpix(sc.ra, sc.dec, depth=LEVEL)
     # cdshealpix returns a numpy scalar/array; coerce to plain int.
-    return int(ipix)
+    return ipix.item()
 
 
 def moc_to_ranges(moc) -> Iterator[Tuple[int, int]]:
