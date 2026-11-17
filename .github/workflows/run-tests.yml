@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.14'
       - name: Install Poetry
         run: pip install --upgrade pip poetry
       - name: Install deps
@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.12', '3.13']
+        python-version: ["3.14","3.13", "3.12", "3.11"]
     services:
       postgres:
         image: postgres:16-alpine
