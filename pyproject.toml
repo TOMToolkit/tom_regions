@@ -1,22 +1,24 @@
-[tool.poetry]
+[project]
 name = "tom-regions"
 version = "0.1.0"
 description = "A TOMToolkit application."
-authors = ["TOMToolkit Team <tomtoolit-maintiners@lco.global>"]
+authors = [
+    {name = "TOMToolkit Team", email = "<tomtoolit-maintiners@lco.global>"},
+]
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = ">=3.12,<3.14"
-tomtoolkit = ">=2.32"
-# PostgreSQL driver. tom_regions requires PostgreSQL >= 14 for int8range,
-# int8multirange, and range_agg.
-psycopg2-binary = ">=2.9"
-# Multi-Order Coverage (MOC) operations.
-mocpy = ">=0.16,<0.20"
-# Fast HEALPix point conversions (lonlat -> ipix at a chosen depth).
-# mocpy and cdshealpix share a Rust core but mocpy 0.19 no longer
-# re-exports cdshealpix as a Python dep, so we declare it explicitly.
-cdshealpix = ">=0.6"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "tomtoolkit @ git+https://github.com/TOMToolkit/tom_base.git@1652-python-310-eol-in-october-2026",
+    # PostgreSQL driver. tom_regions requires PostgreSQL >= 14 for int8range,
+    # int8multirange, and range_agg.
+    "psycopg2-binary >=2.9",
+    # Multi-Order Coverage (MOC) operations.
+    "mocpy (>=0.16,<0.20)",
+    # Fast HEALPix point conversions (lonlat -> ipix at a chosen depth).
+    # mocpy and cdshealpix share a Rust core but mocpy 0.19 no longer
+    # re-exports cdshealpix as a Python dep, so we declare it explicitly.
+    "cdshealpix >=0.6",
+]
 
 [tool.poetry.group.dev.dependencies]
 factory-boy = ">=3.3"
@@ -24,5 +26,5 @@ flake8 = ">=7.0"
 
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core >=2.0.0, <3.0.0"]
 build-backend = "poetry.core.masonry.api"
